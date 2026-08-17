@@ -35,6 +35,7 @@
         body {
             margin: 0;
             padding: 0;
+
             width: 100%;
             height: 100%;
 
@@ -53,6 +54,7 @@
 
         body {
             display: flex;
+
             justify-content: center;
             align-items: center;
 
@@ -71,12 +73,14 @@
 
         #orientation-overlay {
             position: fixed;
+
             inset: 0;
 
             width: 100%;
             height: 100%;
 
             background: #000;
+
             color: #fff;
 
             z-index: 99999;
@@ -84,7 +88,9 @@
             display: none;
 
             flex-direction: column;
+
             justify-content: center;
+
             align-items: center;
 
             text-align: center;
@@ -98,6 +104,7 @@
 
         #orientation-overlay p {
             margin-top: 15px;
+
             font-size: 18px;
         }
 
@@ -108,6 +115,7 @@
             }
 
         }
+
 
         /* =========================================
            ROSTO
@@ -120,6 +128,8 @@
             flex-direction: column;
 
             align-items: center;
+
+            justify-content: center;
 
             animation:
                 float 5s ease-in-out infinite;
@@ -138,37 +148,68 @@
 
         }
 
+
         /* =========================================
-           LINHA DOS OLHOS
+           OLHOS GRANDES
         ========================================= */
 
         .eyes-row {
 
             display: flex;
 
-            gap: 100px;
+            gap: clamp(
+                70px,
+                12vw,
+                180px
+            );
 
             align-items: center;
+
+            justify-content: center;
+
+            width: 100vw;
         }
 
-        /* =========================================
-           OLHO
-        ========================================= */
 
         .eye {
 
-            width: 155px;
-            height: 130px;
+            width: clamp(
+                180px,
+                22vw,
+                330px
+            );
 
-            background: var(--eye-white);
+            height: clamp(
+                160px,
+                20vw,
+                290px
+            );
 
-            border-radius: 80px;
+            background:
+                var(--eye-white);
+
+            border-radius: 50%;
 
             box-shadow:
-                0 0 30px var(--glow-soft);
+                0 0 35px
+                rgba(
+                    240,
+                    250,
+                    255,
+                    0.18
+                ),
+
+                0 0 80px
+                rgba(
+                    240,
+                    250,
+                    255,
+                    0.08
+                );
 
             transition:
-                all 0.4s cubic-bezier(
+                all 0.4s
+                cubic-bezier(
                     0.175,
                     0.885,
                     0.32,
@@ -176,20 +217,30 @@
                 );
         }
 
+
         /* =========================================
            DORMINDO
         ========================================= */
 
         .sleeping .eye {
 
-            height: 8px;
+            width: clamp(
+                150px,
+                19vw,
+                280px
+            );
 
-            width: 120px;
+            height: clamp(
+                10px,
+                1.2vw,
+                18px
+            );
 
-            opacity: 0.2;
+            opacity: 0.25;
 
-            border-radius: 4px;
+            border-radius: 20px;
         }
+
 
         /* =========================================
            FELIZ
@@ -197,12 +248,27 @@
 
         .happy .eye {
 
-            height: 75px;
+            width: clamp(
+                180px,
+                22vw,
+                330px
+            );
+
+            height: clamp(
+                80px,
+                10vw,
+                140px
+            );
 
             background: transparent;
 
             border-top:
-                25px solid var(--eye-white);
+                clamp(
+                    20px,
+                    2.5vw,
+                    35px
+                )
+                solid var(--eye-white);
 
             border-radius:
                 100px 100px 0 0;
@@ -210,8 +276,9 @@
             box-shadow: none;
 
             transform:
-                translateY(25px);
+                translateY(30px);
         }
+
 
         /* =========================================
            PENSANDO
@@ -219,17 +286,35 @@
 
         .thinking #eye-l {
 
-            height: 130px;
+            width: clamp(
+                180px,
+                22vw,
+                330px
+            );
 
-            width: 150px;
+            height: clamp(
+                160px,
+                20vw,
+                290px
+            );
         }
+
 
         .thinking #eye-r {
 
-            height: 90px;
+            width: clamp(
+                180px,
+                22vw,
+                330px
+            );
 
-            width: 150px;
+            height: clamp(
+                110px,
+                15vw,
+                220px
+            );
         }
+
 
         /* =========================================
            RINDO
@@ -237,16 +322,25 @@
 
         .laughing .eye {
 
-            height: 40px;
+            width: clamp(
+                180px,
+                22vw,
+                330px
+            );
 
-            width: 140px;
+            height: clamp(
+                45px,
+                6vw,
+                80px
+            );
 
             transform:
                 skewX(10deg);
         }
 
+
         /* =========================================
-           PISCANDO
+           PISCADA
         ========================================= */
 
         .blink .eye {
@@ -255,65 +349,58 @@
                 scaleY(0) !important;
         }
 
-        /* =========================================
-           CELULARES
-        ========================================= */
-
-        @media (max-width: 700px) {
-
-            .eyes-row {
-
-                gap: 50px;
-            }
-
-            .eye {
-
-                width: 110px;
-
-                height: 95px;
-            }
-
-            .sleeping .eye {
-
-                width: 90px;
-
-                height: 7px;
-            }
-
-            .happy .eye {
-
-                width: 105px;
-            }
-
-            .thinking #eye-l,
-            .thinking #eye-r {
-
-                width: 105px;
-            }
-
-            .laughing .eye {
-
-                width: 100px;
-            }
-
-        }
 
         /* =========================================
            CELULAR DEITADO
         ========================================= */
 
-        @media (max-height: 500px) and (orientation: landscape) {
+        @media (
+            orientation: landscape
+        ) {
+
+            .eyes-row {
+
+                gap: 12vw;
+            }
 
             .eye {
 
-                width: 120px;
+                width: 22vw;
 
-                height: 105px;
+                height: 20vw;
+
+                max-width: 330px;
+
+                max-height: 290px;
+            }
+
+        }
+
+
+        /* =========================================
+           TELAS BAIXAS
+        ========================================= */
+
+        @media (
+            max-height: 500px
+        ) and (
+            orientation: landscape
+        ) {
+
+            .eye {
+
+                width: 20vw;
+
+                height: 17vw;
+
+                max-width: 260px;
+
+                max-height: 220px;
             }
 
             .eyes-row {
 
-                gap: 70px;
+                gap: 10vw;
             }
 
         }
@@ -322,10 +409,12 @@
 
 </head>
 
+
 <body class="sleeping">
 
+
     <!-- =========================================
-         AVISO PARA GIRAR O CELULAR
+         AVISO DE ROTAÇÃO
     ========================================= -->
 
     <div id="orientation-overlay">
@@ -342,7 +431,7 @@
 
 
     <!-- =========================================
-         ROSTO DO ROBÔ
+         ROSTO
     ========================================= -->
 
     <div class="face-container">
@@ -370,21 +459,27 @@
 
     <script>
 
+
         /* =========================================
-           VARIÁVEIS
+           VARIÁVEIS PRINCIPAIS
         ========================================= */
 
-        const body = document.body;
+        const body =
+            document.body;
 
-        let recognitionActive = false;
+        let recognitionActive =
+            false;
 
-        let robotSpeaking = false;
+        let robotSpeaking =
+            false;
 
         let step = 2;
 
         let userName = "";
 
         let speechVoices = [];
+
+        let wakeLock = null;
 
 
         /* =========================================
@@ -413,25 +508,30 @@
 
         if (recognition) {
 
-            recognition.lang = "pt-BR";
+            recognition.lang =
+                "pt-BR";
 
-            recognition.continuous = false;
+            recognition.continuous =
+                false;
 
-            recognition.interimResults = false;
+            recognition.interimResults =
+                false;
 
-            recognition.maxAlternatives = 1;
+            recognition.maxAlternatives =
+                1;
 
         }
 
 
         /* =========================================
-           CARREGAR VOZES DO DISPOSITIVO
+           CARREGAR VOZES
         ========================================= */
 
         function carregarVozes() {
 
             speechVoices =
-                window.speechSynthesis.getVoices();
+                window.speechSynthesis
+                    .getVoices();
 
         }
 
@@ -444,41 +544,38 @@
             in window.speechSynthesis
         ) {
 
-            window.speechSynthesis.onvoiceschanged =
+            window.speechSynthesis
+                .onvoiceschanged =
                 carregarVozes;
 
         }
 
 
         /* =========================================
-           ENCONTRAR VOZ BRASILEIRA
+           LOCALIZAR VOZ BRASILEIRA
         ========================================= */
 
         function encontrarVozBrasileira() {
 
-            if (!speechVoices.length) {
+            if (
+                speechVoices.length === 0
+            ) {
 
                 speechVoices =
-                    window.speechSynthesis.getVoices();
+                    window.speechSynthesis
+                        .getVoices();
 
             }
 
 
-            /*
-             * Primeiro tenta português brasileiro.
-             */
-
             let voz =
                 speechVoices.find(
                     voice =>
-                        voice.lang.toLowerCase() ===
+                        voice.lang
+                            .toLowerCase() ===
                         "pt-br"
                 );
 
-
-            /*
-             * Depois qualquer voz pt.
-             */
 
             if (!voz) {
 
@@ -499,16 +596,117 @@
 
 
         /* =========================================
+           MANTER TELA ACESA
+        ========================================= */
+
+        async function manterTelaAcesa() {
+
+            try {
+
+                if (
+                    "wakeLock"
+                    in navigator
+                ) {
+
+                    /*
+                     * Se já existe um Wake Lock,
+                     * não cria outro.
+                     */
+
+                    if (
+                        wakeLock &&
+                        !wakeLock.released
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    wakeLock =
+                        await navigator
+                            .wakeLock
+                            .request(
+                                "screen"
+                            );
+
+
+                    console.log(
+                        "Tela mantida acesa."
+                    );
+
+
+                    wakeLock.addEventListener(
+                        "release",
+                        () => {
+
+                            console.log(
+                                "Wake Lock liberado."
+                            );
+
+                        }
+                    );
+
+                }
+
+                else {
+
+                    console.log(
+                        "Este navegador não suporta Wake Lock."
+                    );
+
+                }
+
+            }
+
+            catch (erro) {
+
+                console.log(
+                    "Não foi possível manter a tela acesa:",
+                    erro
+                );
+
+            }
+
+        }
+
+
+        /* =========================================
+           RECUPERAR WAKE LOCK
+        ========================================= */
+
+        document.addEventListener(
+            "visibilitychange",
+            async () => {
+
+                if (
+                    document.visibilityState ===
+                    "visible"
+                ) {
+
+                    await manterTelaAcesa();
+
+                }
+
+            }
+        );
+
+
+        /* =========================================
            FALAR
         ========================================= */
 
-        function falar(texto, callback) {
+        function falar(
+            texto,
+            callback
+        ) {
 
-            robotSpeaking = true;
+            robotSpeaking =
+                true;
 
 
             /*
-             * Para o microfone enquanto o robô fala.
+             * Para o microfone.
              */
 
             if (
@@ -520,57 +718,60 @@
 
                     recognition.stop();
 
-                } catch (e) {}
+                }
+
+                catch (e) {}
 
             }
 
 
             /*
-             * Cancela qualquer fala anterior.
+             * Cancela fala anterior.
              */
 
             window.speechSynthesis.cancel();
 
 
             const msg =
-                new SpeechSynthesisUtterance(texto);
+                new SpeechSynthesisUtterance(
+                    texto
+                );
 
 
             /*
-             * PORTUGUÊS BRASILEIRO
+             * Idioma.
              */
 
-            msg.lang = "pt-BR";
+            msg.lang =
+                "pt-BR";
 
 
             /*
-             * VOZ MAIS GRAVE
-             *
-             * Quanto menor o pitch,
-             * mais grave fica.
+             * VOZ GRAVE.
              */
 
-            msg.pitch = 0.60;
+            msg.pitch =
+                0.60;
 
 
             /*
-             * Um pouco mais lenta para
-             * parecer uma voz de robô.
+             * Mais lenta e robótica.
              */
 
-            msg.rate = 0.90;
+            msg.rate =
+                0.90;
 
 
             /*
-             * Volume máximo.
+             * Volume.
              */
 
-            msg.volume = 1.0;
+            msg.volume =
+                1.0;
 
 
             /*
-             * Seleciona voz brasileira
-             * disponível no aparelho.
+             * Seleciona voz brasileira.
              */
 
             const voz =
@@ -579,77 +780,86 @@
 
             if (voz) {
 
-                msg.voice = voz;
+                msg.voice =
+                    voz;
 
             }
 
 
             /*
-             * Quando começa a falar.
+             * Começou a falar.
              */
 
-            msg.onstart = () => {
+            msg.onstart =
+                () => {
 
-                robotSpeaking = true;
+                    robotSpeaking =
+                        true;
 
-                body.className = "awake";
+                    body.className =
+                        "awake";
 
-            };
+                };
 
 
             /*
-             * Quando termina.
+             * Terminou.
              */
 
-            msg.onend = () => {
+            msg.onend =
+                () => {
 
-                robotSpeaking = false;
+                    robotSpeaking =
+                        false;
 
 
-                /*
-                 * Aguarda um pouco para evitar
-                 * que o robô escute o próprio áudio.
-                 */
+                    setTimeout(
+                        () => {
 
-                setTimeout(() => {
+                            if (
+                                recognition &&
+                                recognitionActive
+                            ) {
 
-                    if (
-                        recognition &&
-                        recognitionActive
-                    ) {
+                                try {
 
-                        try {
+                                    recognition.start();
 
-                            recognition.start();
+                                }
 
-                        } catch (e) {}
+                                catch (e) {}
+
+                            }
+
+                        },
+                        500
+                    );
+
+
+                    if (callback) {
+
+                        callback();
 
                     }
 
-                }, 500);
-
-
-                if (callback) {
-
-                    callback();
-
-                }
-
-            };
+                };
 
 
             /*
-             * Caso ocorra erro na fala.
+             * Erro.
              */
 
-            msg.onerror = () => {
+            msg.onerror =
+                () => {
 
-                robotSpeaking = false;
+                    robotSpeaking =
+                        false;
 
-            };
+                };
 
 
-            window.speechSynthesis.speak(msg);
+            window.speechSynthesis
+                .speak(msg);
 
         }
 
@@ -660,7 +870,8 @@
 
         function contarPiada() {
 
-            body.className = "awake";
+            body.className =
+                "awake";
 
 
             falar(
@@ -673,41 +884,48 @@
                         "laughing";
 
 
-                    setTimeout(() => {
+                    setTimeout(
+                        () => {
 
-                        body.className =
-                            "awake";
-
-
-                        falar(
-
-                            "O papo está bom, mas minha bateria está acabando, vou voltar a dormir. Tchau tchau!",
-
-                            () => {
-
-                                body.className =
-                                    "sleeping";
+                            body.className =
+                                "awake";
 
 
-                                recognitionActive =
-                                    false;
+                            falar(
+
+                                "O papo está bom, mas minha bateria está acabando, vou voltar a dormir. Tchau tchau!",
+
+                                () => {
+
+                                    body.className =
+                                        "sleeping";
 
 
-                                if (recognition) {
+                                    recognitionActive =
+                                        false;
 
-                                    try {
 
-                                        recognition.stop();
+                                    if (
+                                        recognition
+                                    ) {
 
-                                    } catch (e) {}
+                                        try {
+
+                                            recognition.stop();
+
+                                        }
+
+                                        catch (e) {}
+
+                                    }
 
                                 }
 
-                            }
+                            );
 
-                        );
-
-                    }, 2000);
+                        },
+                        2000
+                    );
 
                 }
 
@@ -717,33 +935,42 @@
 
 
         /* =========================================
-           PISCADA
+           PISCAR
         ========================================= */
 
-        setInterval(() => {
+        setInterval(
+            () => {
 
-            if (
-                !body.classList.contains(
-                    "sleeping"
-                )
-            ) {
+                if (
+                    !body.classList
+                        .contains(
+                            "sleeping"
+                        )
+                ) {
 
-                body.classList.add(
-                    "blink"
-                );
+                    body.classList
+                        .add(
+                            "blink"
+                        );
 
 
-                setTimeout(() => {
+                    setTimeout(
+                        () => {
 
-                    body.classList.remove(
-                        "blink"
+                            body.classList
+                                .remove(
+                                    "blink"
+                                );
+
+                        },
+                        150
                     );
 
-                }, 150);
+                }
 
-            }
-
-        }, 4000);
+            },
+            4000
+        );
 
 
         /* =========================================
@@ -751,6 +978,15 @@
         ========================================= */
 
         function acordarRobo() {
+
+            /*
+             * IMPORTANTE:
+             * solicita tela sempre acesa
+             * após toque do usuário.
+             */
+
+            manterTelaAcesa();
+
 
             if (
                 !recognitionActive &&
@@ -813,7 +1049,7 @@
 
 
         /* =========================================
-           RECONHECIMENTO DE VOZ
+           PROCESSAMENTO DA VOZ
         ========================================= */
 
         if (recognition) {
@@ -822,12 +1058,9 @@
             recognition.onresult =
                 (event) => {
 
-                    /*
-                     * Se o robô estiver falando,
-                     * ignora o microfone.
-                     */
-
-                    if (robotSpeaking) {
+                    if (
+                        robotSpeaking
+                    ) {
 
                         return;
 
@@ -835,7 +1068,8 @@
 
 
                     const last =
-                        event.results.length - 1;
+                        event.results
+                            .length - 1;
 
 
                     const fala =
@@ -852,7 +1086,7 @@
 
 
                     /* =================================
-                       COMANDO SOBRE PROGRAMAÇÃO
+                       COMANDOS DE PROGRAMAÇÃO
                     ================================= */
 
                     if (
@@ -879,7 +1113,9 @@
                        PASSO 2 — NOME
                     ================================= */
 
-                    if (step === 2) {
+                    if (
+                        step === 2
+                    ) {
 
                         userName =
                             fala
@@ -1074,7 +1310,7 @@
 
 
                         /* =============================
-                           OUTRO NOME
+                           OUTROS
                         ============================= */
 
                         else {
@@ -1089,36 +1325,41 @@
 
 
                         /*
-                         * Continua para a explicação
-                         * do projeto.
+                         * Continua conversa.
                          */
 
-                        setTimeout(() => {
+                        setTimeout(
+                            () => {
 
-                            if (step !== 2) {
+                                if (
+                                    step !== 2
+                                ) {
 
-                                return;
-
-                            }
-
-
-                            body.className =
-                                "thinking";
-
-
-                            falar(
-
-                                "Você sabia que eu sou o protótipo de um projeto educacional? Estou aqui hoje para explicar aos alunos como se ensina algo sem ser aquela coisa robotizada e chata, sabe?",
-
-                                () => {
-
-                                    step = 3;
+                                    return;
 
                                 }
 
-                            );
 
-                        }, 4000);
+                                body.className =
+                                    "thinking";
+
+
+                                falar(
+
+                                    "Você sabia que eu sou o protótipo de um projeto educacional? Estou aqui hoje para explicar aos alunos como se ensina algo sem ser aquela coisa robotizada e chata, sabe?",
+
+                                    () => {
+
+                                        step =
+                                            3;
+
+                                    }
+
+                                );
+
+                            },
+                            4000
+                        );
 
                     }
 
@@ -1128,7 +1369,8 @@
                     ================================= */
 
                     else if (
-                        step === "rafael_check"
+                        step ===
+                        "rafael_check"
                     ) {
 
                         falar(
@@ -1137,7 +1379,8 @@
 
                             () => {
 
-                                step = 3;
+                                step =
+                                    3;
 
                             }
 
@@ -1164,7 +1407,8 @@
 
                             () => {
 
-                                step = 4;
+                                step =
+                                    4;
 
                             }
 
@@ -1180,7 +1424,6 @@
                     else if (
                         step === 4
                     ) {
-
 
                         if (
                             fala.includes(
@@ -1252,7 +1495,6 @@
                         "decisao_piada"
                     ) {
 
-
                         if (
                             fala.includes(
                                 "sim"
@@ -1268,7 +1510,6 @@
                             contarPiada();
 
                         }
-
 
                         else if (
                             fala.includes(
@@ -1310,15 +1551,20 @@
                         !robotSpeaking
                     ) {
 
-                        setTimeout(() => {
+                        setTimeout(
+                            () => {
 
-                            try {
+                                try {
 
-                                recognition.start();
+                                    recognition.start();
 
-                            } catch (e) {}
+                                }
 
-                        }, 300);
+                                catch (e) {}
+
+                            },
+                            300
+                        );
 
                     }
 
@@ -1326,7 +1572,7 @@
 
 
             /* =========================================
-               ERRO DO MICROFONE
+               ERRO MICROFONE
             ========================================= */
 
             recognition.onerror =
@@ -1343,12 +1589,12 @@
 
 
         /* =========================================
-           EVITAR ZOOM POR GESTOS
+           BLOQUEAR GESTOS DE ZOOM
         ========================================= */
 
         document.addEventListener(
             "gesturestart",
-            function (event) {
+            event => {
 
                 event.preventDefault();
 
@@ -1358,7 +1604,7 @@
 
         document.addEventListener(
             "gesturechange",
-            function (event) {
+            event => {
 
                 event.preventDefault();
 
@@ -1368,7 +1614,7 @@
 
         document.addEventListener(
             "gestureend",
-            function (event) {
+            event => {
 
                 event.preventDefault();
 
@@ -1377,7 +1623,7 @@
 
 
         /* =========================================
-           TENTAR TELA CHEIA
+           TELA CHEIA
         ========================================= */
 
         async function entrarTelaCheia() {
@@ -1386,15 +1632,19 @@
 
                 if (
                     document.documentElement
-                        .requestFullscreen
+                        .requestFullscreen &&
+                    !document.fullscreenElement
                 ) {
 
-                    await document.documentElement
+                    await document
+                        .documentElement
                         .requestFullscreen();
 
                 }
 
-            } catch (e) {
+            }
+
+            catch (e) {
 
                 console.log(
                     "Tela cheia controlada pelo navegador."
@@ -1406,14 +1656,15 @@
 
 
         /*
-         * Em alguns navegadores, fullscreen
-         * só pode ser chamado após interação
-         * do usuário.
+         * Primeira interação:
+         * tenta tela cheia + Wake Lock.
          */
 
         window.addEventListener(
             "click",
             () => {
+
+                manterTelaAcesa();
 
                 entrarTelaCheia();
 
@@ -1422,6 +1673,7 @@
                 once: true
             }
         );
+
 
     </script>
 
