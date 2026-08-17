@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     >
 
-    <title>Robô Interativo - Edição Final</title>
+    <meta name="theme-color" content="#050505">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Robô">
+
+    <link rel="manifest" href="manifest.json">
+
+    <title>Robô Interativo</title>
 
     <style>
         :root {
@@ -19,6 +28,7 @@
 
         * {
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
 
         html,
@@ -27,32 +37,52 @@
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: var(--dark-bg);
+
+            background: var(--dark-bg);
+
+            overflow: hidden;
+
+            cursor: pointer;
+
+            touch-action: manipulation;
+            overscroll-behavior: none;
+
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            cursor: pointer;
-            touch-action: manipulation;
+
+            min-height: 100dvh;
+
+            padding:
+                env(safe-area-inset-top)
+                env(safe-area-inset-right)
+                env(safe-area-inset-bottom)
+                env(safe-area-inset-left);
         }
 
         /* =========================================
-           ORIENTAÇÃO DO DISPOSITIVO
+           ORIENTAÇÃO
         ========================================= */
 
         #orientation-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
+
             width: 100%;
             height: 100%;
 
             background: #000;
-            color: white;
+            color: #fff;
 
-            z-index: 9999;
+            z-index: 99999;
 
             display: none;
+
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -62,15 +92,21 @@
             font-family: Arial, sans-serif;
         }
 
+        #orientation-overlay div {
+            font-size: 50px;
+        }
+
         #orientation-overlay p {
             margin-top: 15px;
             font-size: 18px;
         }
 
         @media (orientation: portrait) {
+
             #orientation-overlay {
                 display: flex;
             }
+
         }
 
         /* =========================================
@@ -78,14 +114,19 @@
         ========================================= */
 
         .face-container {
+
             display: flex;
+
             flex-direction: column;
+
             align-items: center;
 
-            animation: float 5s ease-in-out infinite;
+            animation:
+                float 5s ease-in-out infinite;
         }
 
         @keyframes float {
+
             0%,
             100% {
                 transform: translateY(0);
@@ -94,19 +135,28 @@
             50% {
                 transform: translateY(-12px);
             }
+
         }
 
         /* =========================================
-           OLHOS
+           LINHA DOS OLHOS
         ========================================= */
 
         .eyes-row {
+
             display: flex;
+
             gap: 100px;
+
             align-items: center;
         }
 
+        /* =========================================
+           OLHO
+        ========================================= */
+
         .eye {
+
             width: 155px;
             height: 130px;
 
@@ -127,11 +177,13 @@
         }
 
         /* =========================================
-           EXPRESSÃO: DORMINDO
+           DORMINDO
         ========================================= */
 
         .sleeping .eye {
+
             height: 8px;
+
             width: 120px;
 
             opacity: 0.2;
@@ -140,130 +192,187 @@
         }
 
         /* =========================================
-           EXPRESSÃO: FELIZ
+           FELIZ
         ========================================= */
 
         .happy .eye {
+
             height: 75px;
 
             background: transparent;
 
-            border-top: 25px solid var(--eye-white);
+            border-top:
+                25px solid var(--eye-white);
 
-            border-radius: 100px 100px 0 0;
+            border-radius:
+                100px 100px 0 0;
 
             box-shadow: none;
 
-            transform: translateY(25px);
+            transform:
+                translateY(25px);
         }
 
         /* =========================================
-           EXPRESSÃO: PENSANDO
+           PENSANDO
         ========================================= */
 
         .thinking #eye-l {
+
             height: 130px;
+
             width: 150px;
         }
 
         .thinking #eye-r {
+
             height: 90px;
+
             width: 150px;
         }
 
         /* =========================================
-           EXPRESSÃO: RINDO
+           RINDO
         ========================================= */
 
         .laughing .eye {
+
             height: 40px;
+
             width: 140px;
 
-            transform: skewX(10deg);
+            transform:
+                skewX(10deg);
         }
 
         /* =========================================
-           PISCADA
+           PISCANDO
         ========================================= */
 
         .blink .eye {
-            transform: scaleY(0) !important;
+
+            transform:
+                scaleY(0) !important;
         }
 
         /* =========================================
-           RESPONSIVIDADE
+           CELULARES
         ========================================= */
 
         @media (max-width: 700px) {
+
             .eyes-row {
+
                 gap: 50px;
             }
 
             .eye {
+
                 width: 110px;
+
                 height: 95px;
             }
 
             .sleeping .eye {
+
                 width: 90px;
+
                 height: 7px;
             }
 
             .happy .eye {
+
                 width: 105px;
             }
 
             .thinking #eye-l,
             .thinking #eye-r {
+
                 width: 105px;
             }
 
             .laughing .eye {
+
                 width: 100px;
             }
+
         }
+
+        /* =========================================
+           CELULAR DEITADO
+        ========================================= */
+
+        @media (max-height: 500px) and (orientation: landscape) {
+
+            .eye {
+
+                width: 120px;
+
+                height: 105px;
+            }
+
+            .eyes-row {
+
+                gap: 70px;
+            }
+
+        }
+
     </style>
+
 </head>
 
 <body class="sleeping">
 
     <!-- =========================================
-         AVISO DE ORIENTAÇÃO
-    ========================================== -->
+         AVISO PARA GIRAR O CELULAR
+    ========================================= -->
 
     <div id="orientation-overlay">
-        <div style="font-size: 50px;">📱🔄</div>
+
+        <div>
+            📱🔄
+        </div>
 
         <p>
             Gire o dispositivo para deitado.
         </p>
+
     </div>
+
 
     <!-- =========================================
          ROSTO DO ROBÔ
-    ========================================== -->
+    ========================================= -->
 
     <div class="face-container">
 
         <div class="eyes-row">
 
-            <div id="eye-l" class="eye"></div>
+            <div
+                id="eye-l"
+                class="eye">
+            </div>
 
-            <div id="eye-r" class="eye"></div>
+            <div
+                id="eye-r"
+                class="eye">
+            </div>
 
         </div>
 
     </div>
 
+
     <!-- =========================================
          JAVASCRIPT
-    ========================================== -->
+    ========================================= -->
 
     <script>
 
         /* =========================================
-           VARIÁVEIS PRINCIPAIS
-        ========================================== */
+           VARIÁVEIS
+        ========================================= */
 
         const body = document.body;
 
@@ -275,14 +384,17 @@
 
         let userName = "";
 
+        let speechVoices = [];
+
 
         /* =========================================
            RECONHECIMENTO DE VOZ
-        ========================================== */
+        ========================================= */
 
         const SpeechRecognition =
             window.SpeechRecognition ||
             window.webkitSpeechRecognition;
+
 
         if (!SpeechRecognition) {
 
@@ -291,6 +403,7 @@
             );
 
         }
+
 
         const recognition =
             SpeechRecognition
@@ -306,23 +419,102 @@
 
             recognition.interimResults = false;
 
+            recognition.maxAlternatives = 1;
+
         }
 
 
         /* =========================================
-           FUNÇÃO DE FALA DO ROBÔ
-        ========================================== */
+           CARREGAR VOZES DO DISPOSITIVO
+        ========================================= */
+
+        function carregarVozes() {
+
+            speechVoices =
+                window.speechSynthesis.getVoices();
+
+        }
+
+
+        carregarVozes();
+
+
+        if (
+            "onvoiceschanged"
+            in window.speechSynthesis
+        ) {
+
+            window.speechSynthesis.onvoiceschanged =
+                carregarVozes;
+
+        }
+
+
+        /* =========================================
+           ENCONTRAR VOZ BRASILEIRA
+        ========================================= */
+
+        function encontrarVozBrasileira() {
+
+            if (!speechVoices.length) {
+
+                speechVoices =
+                    window.speechSynthesis.getVoices();
+
+            }
+
+
+            /*
+             * Primeiro tenta português brasileiro.
+             */
+
+            let voz =
+                speechVoices.find(
+                    voice =>
+                        voice.lang.toLowerCase() ===
+                        "pt-br"
+                );
+
+
+            /*
+             * Depois qualquer voz pt.
+             */
+
+            if (!voz) {
+
+                voz =
+                    speechVoices.find(
+                        voice =>
+                            voice.lang
+                                .toLowerCase()
+                                .startsWith("pt")
+                    );
+
+            }
+
+
+            return voz || null;
+
+        }
+
+
+        /* =========================================
+           FALAR
+        ========================================= */
 
         function falar(texto, callback) {
 
             robotSpeaking = true;
 
+
             /*
-             * Para o reconhecimento enquanto o robô fala.
-             * Isso evita que ele escute a própria voz.
+             * Para o microfone enquanto o robô fala.
              */
 
-            if (recognition && recognitionActive) {
+            if (
+                recognition &&
+                recognitionActive
+            ) {
 
                 try {
 
@@ -344,15 +536,69 @@
                 new SpeechSynthesisUtterance(texto);
 
 
+            /*
+             * PORTUGUÊS BRASILEIRO
+             */
+
             msg.lang = "pt-BR";
-
-            msg.pitch = 1.3;
-
-            msg.rate = 1.05;
 
 
             /*
-             * Quando terminar de falar.
+             * VOZ MAIS GRAVE
+             *
+             * Quanto menor o pitch,
+             * mais grave fica.
+             */
+
+            msg.pitch = 0.60;
+
+
+            /*
+             * Um pouco mais lenta para
+             * parecer uma voz de robô.
+             */
+
+            msg.rate = 0.90;
+
+
+            /*
+             * Volume máximo.
+             */
+
+            msg.volume = 1.0;
+
+
+            /*
+             * Seleciona voz brasileira
+             * disponível no aparelho.
+             */
+
+            const voz =
+                encontrarVozBrasileira();
+
+
+            if (voz) {
+
+                msg.voice = voz;
+
+            }
+
+
+            /*
+             * Quando começa a falar.
+             */
+
+            msg.onstart = () => {
+
+                robotSpeaking = true;
+
+                body.className = "awake";
+
+            };
+
+
+            /*
+             * Quando termina.
              */
 
             msg.onend = () => {
@@ -361,8 +607,8 @@
 
 
                 /*
-                 * Pequeno intervalo antes
-                 * de ligar novamente o microfone.
+                 * Aguarda um pouco para evitar
+                 * que o robô escute o próprio áudio.
                  */
 
                 setTimeout(() => {
@@ -380,7 +626,7 @@
 
                     }
 
-                }, 400);
+                }, 500);
 
 
                 if (callback) {
@@ -392,14 +638,25 @@
             };
 
 
+            /*
+             * Caso ocorra erro na fala.
+             */
+
+            msg.onerror = () => {
+
+                robotSpeaking = false;
+
+            };
+
+
             window.speechSynthesis.speak(msg);
 
         }
 
 
         /* =========================================
-           PIADA DE DESPEDIDA
-        ========================================== */
+           PIADA
+        ========================================= */
 
         function contarPiada() {
 
@@ -407,24 +664,33 @@
 
 
             falar(
+
                 "Sabe por que o robô foi ao médico? Porque ele estava com um vírus! Rá! Rá! Rá! Rá!",
+
                 () => {
 
-                    body.className = "laughing";
+                    body.className =
+                        "laughing";
 
 
                     setTimeout(() => {
 
-                        body.className = "awake";
+                        body.className =
+                            "awake";
 
 
                         falar(
+
                             "O papo está bom, mas minha bateria está acabando, vou voltar a dormir. Tchau tchau!",
+
                             () => {
 
-                                body.className = "sleeping";
+                                body.className =
+                                    "sleeping";
 
-                                recognitionActive = false;
+
+                                recognitionActive =
+                                    false;
 
 
                                 if (recognition) {
@@ -438,36 +704,40 @@
                                 }
 
                             }
+
                         );
 
                     }, 2000);
 
                 }
+
             );
 
         }
 
 
         /* =========================================
-           PISCADA AUTOMÁTICA
-        ========================================== */
+           PISCADA
+        ========================================= */
 
         setInterval(() => {
 
-            /*
-             * Só pisca quando o robô não está dormindo.
-             */
-
             if (
-                !body.classList.contains("sleeping")
+                !body.classList.contains(
+                    "sleeping"
+                )
             ) {
 
-                body.classList.add("blink");
+                body.classList.add(
+                    "blink"
+                );
 
 
                 setTimeout(() => {
 
-                    body.classList.remove("blink");
+                    body.classList.remove(
+                        "blink"
+                    );
 
                 }, 150);
 
@@ -478,22 +748,21 @@
 
         /* =========================================
            ACORDAR ROBÔ
-        ========================================== */
+        ========================================= */
 
         function acordarRobo() {
-
-            /*
-             * Evita iniciar várias vezes.
-             */
 
             if (
                 !recognitionActive &&
                 recognition
             ) {
 
-                body.className = "awake";
+                body.className =
+                    "awake";
 
-                recognitionActive = true;
+
+                recognitionActive =
+                    true;
 
 
                 try {
@@ -501,28 +770,30 @@
                     recognition.start();
 
 
-                    /*
-                     * Primeira fala.
-                     */
-
                     falar(
+
                         "Olá! Eu sou o robozinho. Qual seu nome?",
+
                         () => {
 
                             step = 2;
 
                         }
+
                     );
 
+                }
 
-                } catch (error) {
+                catch (error) {
 
                     console.log(
                         "Erro ao inicializar escuta:",
                         error
                     );
 
-                    recognitionActive = false;
+
+                    recognitionActive =
+                        false;
 
                 }
 
@@ -532,140 +803,322 @@
 
 
         /* =========================================
-           CLIQUE / TOQUE NA TELA
-        ========================================== */
+           CLIQUE / TOQUE
+        ========================================= */
 
         window.addEventListener(
             "click",
-            () => {
-
-                acordarRobo();
-
-            }
+            acordarRobo
         );
 
 
         /* =========================================
-           PROCESSAMENTO DA VOZ
-        ========================================== */
+           RECONHECIMENTO DE VOZ
+        ========================================= */
 
         if (recognition) {
 
 
-            recognition.onresult = (event) => {
-
-                /*
-                 * Segurança:
-                 * se o robô estiver falando,
-                 * ignora qualquer resultado.
-                 */
-
-                if (robotSpeaking) {
-
-                    return;
-
-                }
-
-
-                const last =
-                    event.results.length - 1;
-
-
-                const fala =
-                    event.results[last][0]
-                        .transcript
-                        .toLowerCase()
-                        .trim();
-
-
-                console.log(
-                    "Usuário disse:",
-                    fala
-                );
-
-
-                /* =====================================
-                   COMANDOS GLOBAIS
-                ===================================== */
-
-                if (
-                    fala.includes("programado") ||
-                    fala.includes("linguagem")
-                ) {
-
-                    falar(
-                        "Eu fui elaborado totalmente em JavaScript! É a linguagem que me dá vida."
-                    );
-
-                    return;
-
-                }
-
-
-                /* =====================================
-                   PASSO 2 — NOME
-                ===================================== */
-
-                if (step === 2) {
+            recognition.onresult =
+                (event) => {
 
                     /*
-                     * Pega a última palavra da frase
-                     * como nome padrão.
+                     * Se o robô estiver falando,
+                     * ignora o microfone.
                      */
 
-                    userName =
-                        fala.split(" ").pop();
+                    if (robotSpeaking) {
+
+                        return;
+
+                    }
+
+
+                    const last =
+                        event.results.length - 1;
+
+
+                    const fala =
+                        event.results[last][0]
+                            .transcript
+                            .toLowerCase()
+                            .trim();
+
+
+                    console.log(
+                        "Usuário disse:",
+                        fala
+                    );
 
 
                     /* =================================
-                       VANESSA
+                       COMANDO SOBRE PROGRAMAÇÃO
                     ================================= */
 
                     if (
-                        fala.includes("vanessa") ||
-                        fala.includes("wanessa")
+                        fala.includes(
+                            "programado"
+                        ) ||
+                        fala.includes(
+                            "linguagem"
+                        )
                     ) {
 
-                        body.className = "happy";
-
-
                         falar(
-                            "Busquei aqui no meu banco de dados... Vanessa é diretora da escola Amácio Mazzaropi, muito prazer em te conhecer!"
+
+                            "Eu fui elaborado totalmente em JavaScript! É a linguagem que me dá vida."
+
                         );
+
+                        return;
 
                     }
 
 
                     /* =================================
-                       CAROL
+                       PASSO 2 — NOME
                     ================================= */
 
-                    else if (
-                        fala.includes("carol")
-                    ) {
+                    if (step === 2) {
 
-                        body.className = "happy";
-
-
-                        falar(
-                            "Espere! Busquei aqui no meu banco de dados e vi que você é professora de matemática da escola Amácio Mazzaroppi, essa vai pro céu direto!"
-                        );
-
-                    }
+                        userName =
+                            fala
+                                .split(" ")
+                                .pop();
 
 
-                    /* =================================
-                       EDCARMEN
-                    ================================= */
+                        /* =============================
+                           VANESSA
+                        ============================= */
 
-                    else if (
-                        fala.includes("edcarmen") ||
-                        fala.includes("edicarmen")
-                    ) {
+                        if (
+                            fala.includes(
+                                "vanessa"
+                            ) ||
+                            fala.includes(
+                                "wanessa"
+                            )
+                        ) {
 
-                        falar(
-                            "Busquei aqui no meu banco de dados e vi que você é coordenadora da escola Amácio Mazzaropi, muito bom te conhecer!"
-                        );
+                            body.className =
+                                "happy";
+
+
+                            falar(
+
+                                "Busquei aqui no meu banco de dados... Vanessa é diretora da escola Amácio Mazzaropi, muito prazer em te conhecer!"
+
+                            );
+
+                        }
+
+
+                        /* =============================
+                           CAROL
+                        ============================= */
+
+                        else if (
+                            fala.includes(
+                                "carol"
+                            )
+                        ) {
+
+                            body.className =
+                                "happy";
+
+
+                            falar(
+
+                                "Espere! Busquei aqui no meu banco de dados e vi que você é professora de matemática da escola Amácio Mazzaroppi, essa vai pro céu direto!"
+
+                            );
+
+                        }
+
+
+                        /* =============================
+                           EDCARMEN
+                        ============================= */
+
+                        else if (
+                            fala.includes(
+                                "edcarmen"
+                            ) ||
+                            fala.includes(
+                                "edicarmen"
+                            )
+                        ) {
+
+                            falar(
+
+                                "Busquei aqui no meu banco de dados e vi que você é coordenadora da escola Amácio Mazzaropi, muito bom te conhecer!"
+
+                            );
+
+                        }
+
+
+                        /* =============================
+                           RAFAEL
+                        ============================= */
+
+                        else if (
+                            fala.includes(
+                                "rafael"
+                            )
+                        ) {
+
+                            body.className =
+                                "thinking";
+
+
+                            falar(
+
+                                "Rafael... busquei aqui no meu banco de dados e existem três rafaéis, um aluno, um professor e um coordenador. Qual você é?",
+
+                                () => {
+
+                                    step =
+                                        "rafael_check";
+
+                                }
+
+                            );
+
+
+                            return;
+
+                        }
+
+
+                        /* =============================
+                           NEUSIENE
+                        ============================= */
+
+                        else if (
+                            fala.includes(
+                                "neusiene"
+                            )
+                        ) {
+
+                            body.className =
+                                "happy";
+
+
+                            falar(
+
+                                "Espere! Busquei aqui no meu banco de dados e vi que você vai se aposentar! Parabéns!"
+
+                            );
+
+                        }
+
+
+                        /* =============================
+                           RONALDO
+                        ============================= */
+
+                        else if (
+                            fala.includes(
+                                "ronaldo"
+                            )
+                        ) {
+
+                            falar(
+
+                                "Espere! Busquei aqui no meu banco de dados e vi que você é professor de matemática, legal te conhecer!"
+
+                            );
+
+                        }
+
+
+                        /* =============================
+                           LARA
+                        ============================= */
+
+                        else if (
+                            fala.includes(
+                                "lara"
+                            )
+                        ) {
+
+                            falar(
+
+                                "Hi, teacher! Busquei aqui no meu banco de dados e vi que você é professora de português e inglês na escola Amácio Mazzaropi."
+
+                            );
+
+                        }
+
+
+                        /* =============================
+                           LUIZA
+                        ============================= */
+
+                        else if (
+                            fala.includes(
+                                "luiza"
+                            )
+                        ) {
+
+                            body.className =
+                                "happy";
+
+
+                            falar(
+                                "Ah, oi mãe!"
+                            );
+
+                        }
+
+
+                        /* =============================
+                           OUTRO NOME
+                        ============================= */
+
+                        else {
+
+                            falar(
+
+                                `Oi ${userName}! Legal te conhecer!`
+
+                            );
+
+                        }
+
+
+                        /*
+                         * Continua para a explicação
+                         * do projeto.
+                         */
+
+                        setTimeout(() => {
+
+                            if (step !== 2) {
+
+                                return;
+
+                            }
+
+
+                            body.className =
+                                "thinking";
+
+
+                            falar(
+
+                                "Você sabia que eu sou o protótipo de um projeto educacional? Estou aqui hoje para explicar aos alunos como se ensina algo sem ser aquela coisa robotizada e chata, sabe?",
+
+                                () => {
+
+                                    step = 3;
+
+                                }
+
+                            );
+
+                        }, 4000);
 
                     }
 
@@ -675,347 +1128,303 @@
                     ================================= */
 
                     else if (
-                        fala.includes("rafael")
-                    ) {
-
-                        body.className = "thinking";
-
-
-                        falar(
-                            "Rafael... busquei aqui no meu banco de dados e existem três rafaéis, um aluno, um professor e um coordenador. Qual você é?",
-                            () => {
-
-                                step = "rafael_check";
-
-                            }
-                        );
-
-
-                        /*
-                         * Muito importante:
-                         * não executa a transição abaixo
-                         * imediatamente.
-                         */
-
-                        return;
-
-                    }
-
-
-                    /* =================================
-                       NEUSIENE
-                    ================================= */
-
-                    else if (
-                        fala.includes("neusiene")
-                    ) {
-
-                        body.className = "happy";
-
-
-                        falar(
-                            "Espere! Busquei aqui no meu banco de dados e vi que você vai se aposentar! Parabéns!"
-                        );
-
-                    }
-
-
-                    /* =================================
-                       RONALDO
-                    ================================= */
-
-                    else if (
-                        fala.includes("ronaldo")
+                        step === "rafael_check"
                     ) {
 
                         falar(
-                            "Espere! Busquei aqui no meu banco de dados e vi que você é professor de matemática, legal te conhecer!"
-                        );
 
-                    }
+                            "Legal te conhecer!",
 
-
-                    /* =================================
-                       LARA
-                    ================================= */
-
-                    else if (
-                        fala.includes("lara")
-                    ) {
-
-                        falar(
-                            "Hi, teacher! Busquei aqui no meu banco de dados e vi que você é professora de português e inglês na escola Amácio Mazzaropi."
-                        );
-
-                    }
-
-
-                    /* =================================
-                       LUIZA
-                    ================================= */
-
-                    else if (
-                        fala.includes("luiza")
-                    ) {
-
-                        body.className = "happy";
-
-
-                        falar(
-                            "Ah, oi mãe!"
-                        );
-
-                    }
-
-
-                    /* =================================
-                       OUTRO NOME
-                    ================================= */
-
-                    else {
-
-                        falar(
-                            `Oi ${userName}! Legal te conhecer!`
-                        );
-
-                    }
-
-
-                    /*
-                     * Depois de identificar a pessoa,
-                     * inicia a explicação do projeto.
-                     */
-
-                    setTimeout(() => {
-
-                        /*
-                         * Se o robô estiver no fluxo do Rafael,
-                         * não continua automaticamente.
-                         */
-
-                        if (step !== 2) {
-
-                            return;
-
-                        }
-
-
-                        body.className = "thinking";
-
-
-                        falar(
-                            "Você sabia que eu sou o protótipo de um projeto educacional? Estou aqui hoje para explicar aos alunos como se ensina algo sem ser aquela coisa robotizada e chata, sabe?",
                             () => {
 
                                 step = 3;
 
                             }
-                        );
 
-                    }, 4000);
-
-                }
-
-
-                /* =====================================
-                   RAFAEL — IDENTIFICAÇÃO
-                ===================================== */
-
-                else if (
-                    step === "rafael_check"
-                ) {
-
-                    falar(
-                        "Legal te conhecer!",
-                        () => {
-
-                            step = 3;
-
-                        }
-                    );
-
-                }
-
-
-                /* =====================================
-                   PASSO 3 — PROJETO
-                ===================================== */
-
-                else if (step === 3) {
-
-                    body.className = "awake";
-
-
-                    falar(
-                        "Pois é! O segredo é que, mesmo sendo um robô, eu tenho o intuito de ensinar seres humanos. Posso te ajudar em algo a mais?",
-                        () => {
-
-                            step = 4;
-
-                        }
-                    );
-
-                }
-
-
-                /* =====================================
-                   PASSO 4 — HORAS / PIADA
-                ===================================== */
-
-                else if (step === 4) {
-
-
-                    /*
-                     * Perguntou as horas.
-                     */
-
-                    if (
-                        fala.includes("horas") ||
-                        fala.includes("dia")
-                    ) {
-
-                        const agora =
-                            new Date();
-
-
-                        const tempo =
-                            agora.toLocaleTimeString(
-                                "pt-BR",
-                                {
-                                    hour: "2-digit",
-                                    minute: "2-digit"
-                                }
-                            );
-
-
-                        falar(
-                            `Agora são exatamente ${tempo}. E por falar nisso, você quer ouvir uma piada?`,
-                            () => {
-
-                                step = "decisao_piada";
-
-                            }
                         );
 
                     }
 
 
-                    /*
-                     * Qualquer outra resposta.
-                     */
-
-                    else {
-
-                        falar(
-                            "Entendi. Mas antes de eu ir, você quer ouvir uma piada?",
-                            () => {
-
-                                step = "decisao_piada";
-
-                            }
-                        );
-
-                    }
-
-                }
-
-
-                /* =====================================
-                   DECISÃO DA PIADA
-                ===================================== */
-
-                else if (
-                    step === "decisao_piada"
-                ) {
-
-
-                    /*
-                     * SIM
-                     */
-
-                    if (
-                        fala.includes("sim") ||
-                        fala.includes("quero") ||
-                        fala.includes("pode")
-                    ) {
-
-                        contarPiada();
-
-                    }
-
-
-                    /*
-                     * NÃO
-                     */
+                    /* =================================
+                       PASSO 3
+                    ================================= */
 
                     else if (
-                        fala.includes("não") ||
-                        fala.includes("nao")
+                        step === 3
                     ) {
 
+                        body.className =
+                            "awake";
+
+
                         falar(
-                            "Ah, vou contar mesmo assim, porque eu sou um robô muito engraçado!",
+
+                            "Pois é! O segredo é que, mesmo sendo um robô, eu tenho o intuito de ensinar seres humanos. Posso te ajudar em algo a mais?",
+
                             () => {
 
-                                contarPiada();
+                                step = 4;
 
                             }
+
                         );
 
                     }
 
-                }
 
-            };
+                    /* =================================
+                       PASSO 4
+                    ================================= */
+
+                    else if (
+                        step === 4
+                    ) {
+
+
+                        if (
+                            fala.includes(
+                                "horas"
+                            ) ||
+                            fala.includes(
+                                "dia"
+                            )
+                        ) {
+
+                            const agora =
+                                new Date();
+
+
+                            const tempo =
+                                agora.toLocaleTimeString(
+                                    "pt-BR",
+                                    {
+                                        hour:
+                                            "2-digit",
+
+                                        minute:
+                                            "2-digit"
+                                    }
+                                );
+
+
+                            falar(
+
+                                `Agora são exatamente ${tempo}. E por falar nisso, você quer ouvir uma piada?`,
+
+                                () => {
+
+                                    step =
+                                        "decisao_piada";
+
+                                }
+
+                            );
+
+                        }
+
+                        else {
+
+                            falar(
+
+                                "Entendi. Mas antes de eu ir, você quer ouvir uma piada?",
+
+                                () => {
+
+                                    step =
+                                        "decisao_piada";
+
+                                }
+
+                            );
+
+                        }
+
+                    }
+
+
+                    /* =================================
+                       DECISÃO DA PIADA
+                    ================================= */
+
+                    else if (
+                        step ===
+                        "decisao_piada"
+                    ) {
+
+
+                        if (
+                            fala.includes(
+                                "sim"
+                            ) ||
+                            fala.includes(
+                                "quero"
+                            ) ||
+                            fala.includes(
+                                "pode"
+                            )
+                        ) {
+
+                            contarPiada();
+
+                        }
+
+
+                        else if (
+                            fala.includes(
+                                "não"
+                            ) ||
+                            fala.includes(
+                                "nao"
+                            )
+                        ) {
+
+                            falar(
+
+                                "Ah, vou contar mesmo assim, porque eu sou um robô muito engraçado!",
+
+                                () => {
+
+                                    contarPiada();
+
+                                }
+
+                            );
+
+                        }
+
+                    }
+
+                };
 
 
             /* =========================================
-               FIM DO RECONHECIMENTO
-            ========================================== */
+               MICROFONE TERMINOU
+            ========================================= */
 
-            recognition.onend = () => {
+            recognition.onend =
+                () => {
 
-                /*
-                 * Se o robô ainda está ativo e não
-                 * está falando, tenta iniciar novamente.
-                 */
+                    if (
+                        recognitionActive &&
+                        !robotSpeaking
+                    ) {
 
-                if (
-                    recognitionActive &&
-                    !robotSpeaking
-                ) {
+                        setTimeout(() => {
 
-                    setTimeout(() => {
+                            try {
 
-                        try {
+                                recognition.start();
 
-                            recognition.start();
+                            } catch (e) {}
 
-                        } catch (e) {}
+                        }, 300);
 
-                    }, 300);
+                    }
 
-                }
-
-            };
+                };
 
 
             /* =========================================
                ERRO DO MICROFONE
-            ========================================== */
+            ========================================= */
 
-            recognition.onerror = (event) => {
+            recognition.onerror =
+                (event) => {
 
-                console.log(
-                    "Erro no reconhecimento:",
-                    event.error
-                );
+                    console.log(
+                        "Erro no reconhecimento:",
+                        event.error
+                    );
 
-            };
+                };
 
         }
+
+
+        /* =========================================
+           EVITAR ZOOM POR GESTOS
+        ========================================= */
+
+        document.addEventListener(
+            "gesturestart",
+            function (event) {
+
+                event.preventDefault();
+
+            }
+        );
+
+
+        document.addEventListener(
+            "gesturechange",
+            function (event) {
+
+                event.preventDefault();
+
+            }
+        );
+
+
+        document.addEventListener(
+            "gestureend",
+            function (event) {
+
+                event.preventDefault();
+
+            }
+        );
+
+
+        /* =========================================
+           TENTAR TELA CHEIA
+        ========================================= */
+
+        async function entrarTelaCheia() {
+
+            try {
+
+                if (
+                    document.documentElement
+                        .requestFullscreen
+                ) {
+
+                    await document.documentElement
+                        .requestFullscreen();
+
+                }
+
+            } catch (e) {
+
+                console.log(
+                    "Tela cheia controlada pelo navegador."
+                );
+
+            }
+
+        }
+
+
+        /*
+         * Em alguns navegadores, fullscreen
+         * só pode ser chamado após interação
+         * do usuário.
+         */
+
+        window.addEventListener(
+            "click",
+            () => {
+
+                entrarTelaCheia();
+
+            },
+            {
+                once: true
+            }
+        );
 
     </script>
 
 </body>
+
 </html>
