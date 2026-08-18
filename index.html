@@ -385,6 +385,69 @@ let wakeLock=null;
 
 let voices=[];
 
+let audioCtx=null;
+
+
+/* =========================================
+   GERADOR DE SONS ROBÓTICOS (WEB AUDIO)
+========================================= */
+
+function inicializarAudioContext() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+}
+
+function tocarSomRobotico(tipo) {
+    try {
+        inicializarAudioContext();
+        if (!audioCtx) return;
+
+        const now = audioCtx.currentTime;
+
+        if (tipo === 'bip') {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(800, now);
+            osc.frequency.exponentialRampToValueAtTime(400, now + 0.15);
+
+            gain.gain.setValueAtTime(0.1, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            osc.start(now);
+            osc.stop(now + 0.15);
+        } 
+        else if (tipo === 'processando') {
+            for (let i = 0; i < 3; i++) {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(600 + (i * 300), now + (i * 0.08));
+
+                gain.gain.setValueAtTime(0.08, now + (i * 0.08));
+                gain.gain.exponentialRampToValueAtTime(0.001, now + (i * 0.08) + 0.07);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now + (i * 0.08));
+                osc.stop(now + (i * 0.08) + 0.07);
+            }
+        }
+    } catch(e) {
+        console.log("Erro ao gerar áudio:", e);
+    }
+}
+
 
 /* =========================================
    RECONHECIMENTO
@@ -440,10 +503,10 @@ if("onvoiceschanged" in window.speechSynthesis){
 
 
 /* =========================================
-   ESCOLHER VOZ MASCULINA
+   ESCOLHER VOZ DE ALTA QUALIDADE
 ========================================= */
 
-function encontrarVozMasculina(){
+function encontrarMelhorVoz(){
 
     if(!voices.length){
 
@@ -451,82 +514,27 @@ function encontrarVozMasculina(){
 
     }
 
-
-    /*
-     * Tenta encontrar vozes masculinas
-     * em português brasileiro.
-     */
-
-    const nomesMasculinos=[
-
-        "daniel",
+    const preferidos = [
+        "google português do brasil",
+        "luciana",
         "felipe",
-        "ricardo",
-        "lucas",
-        "jorge",
-        "male",
-        "masculina",
-        "homem"
-
+        "daniel",
+        "ricardo"
     ];
 
-
-    let voz=
-
-        voices.find(voice=>{
-
-            const nome=
-                voice.name.toLowerCase();
-
-            const idioma=
-                voice.lang.toLowerCase();
-
-            return (
-
-                (idioma==="pt-br" ||
-                 idioma.startsWith("pt-br")) &&
-
-                nomesMasculinos.some(
-                    termo=>nome.includes(termo)
-                )
-
-            );
-
-        });
-
-
-    /*
-     * Caso não encontre uma voz masculina,
-     * usa qualquer voz brasileira.
-     */
+    let voz = voices.find(v => {
+        const name = v.name.toLowerCase();
+        const lang = v.lang.toLowerCase();
+        return (lang === "pt-br" || lang.startsWith("pt-br")) && preferidos.some(p => name.includes(p));
+    });
 
     if(!voz){
-
-        voz=
-
-            voices.find(
-                voice=>
-                    voice.lang
-                        .toLowerCase()
-                        .startsWith("pt-br")
-            );
-
+        voz = voices.find(v => v.lang.toLowerCase().startsWith("pt-br"));
     }
-
 
     if(!voz){
-
-        voz=
-
-            voices.find(
-                voice=>
-                    voice.lang
-                        .toLowerCase()
-                        .startsWith("pt")
-            );
-
+        voz = voices.find(v => v.lang.toLowerCase().startsWith("pt"));
     }
-
 
     return voz || null;
 
@@ -598,13 +606,15 @@ document.addEventListener(
 
 
 /* =========================================
-   FALAR — VOZ BEM GROSSA/MASCULINA
+   FALAR — COM SONS ROBÓTICOS
 ========================================= */
 
 function falar(texto,callback){
 
     robotSpeaking=true;
 
+    /* Toca um bip de processamento robótico antes de começar a falar */
+    tocarSomRobotico('bip');
 
     if(
         recognition &&
@@ -630,26 +640,19 @@ function falar(texto,callback){
     msg.lang="pt-BR";
 
 
-    /*
-     * Pitch 0.1 deixa a voz no tom mais grave/grosso
-     * possível suportado pelos navegadores mobile e desktop.
-     */
-
-    msg.pitch=0.1;
+    /* Pitch natural e limpo para evitar distorção vocal no mobile */
+    msg.pitch=0.6;
 
 
-    /*
-     * Velocidade ligeiramente pausada para reforçar o tom grave.
-     */
-
-    msg.rate=0.85;
+    /* Velocidade adaptada para soar computacional, sem embolar */
+    msg.rate=0.9;
 
 
     msg.volume=1;
 
 
     const voz=
-        encontrarVozMasculina();
+        encontrarMelhorVoz();
 
 
     if(voz){
@@ -705,7 +708,10 @@ function falar(texto,callback){
     };
 
 
-    window.speechSynthesis.speak(msg);
+    /* Pequeno retardo para o bip inicial tocar limpo */
+    setTimeout(() => {
+        window.speechSynthesis.speak(msg);
+    }, 150);
 
 }
 
@@ -726,6 +732,7 @@ function contarPiada(){
         ()=>{
 
             body.className="laughing";
+            tocarSomRobotico('processando');
 
 
             setTimeout(()=>{
@@ -798,6 +805,7 @@ setInterval(()=>{
 function acordarRobo(){
 
     manterTelaAcesa();
+    inicializarAudioContext();
 
 
     if(
@@ -868,7 +876,6 @@ function irParaSegundaParte(){
 
         ()=>{
 
-            /* Pausa dramática de 1.5 segundos antes da 3ª parte */
             setTimeout(()=>{
 
                 irParaTerceiraParte();
@@ -898,6 +905,32 @@ function irParaTerceiraParte(){
 
     );
 
+}
+
+
+/* =========================================
+   EXTRAÇÃO DE NOME REAL
+========================================= */
+
+function extrairNome(fala) {
+    let limpo = fala.toLowerCase()
+        .replace(/meu nome é/g, '')
+        .replace(/me chamo/g, '')
+        .replace(/eu sou o/g, '')
+        .replace(/eu sou a/g, '')
+        .replace(/eu sou/g, '')
+        .replace(/sou o/g, '')
+        .replace(/sou a/g, '')
+        .replace(/oi/g, '')
+        .replace(/olá/g, '')
+        .trim();
+
+    if (!limpo) return "";
+
+    let partes = limpo.split(" ");
+    let primeiroNome = partes[0];
+
+    return primeiroNome.charAt(0).toUpperCase() + primeiroNome.slice(1);
 }
 
 
@@ -939,11 +972,9 @@ if(recognition){
 
         if(step===2){
 
-            let nomeCapturado=
-                fala.replace("meu nome é", "").trim().split(" ").pop();
+            tocarSomRobotico('processando');
 
-            userName = nomeCapturado ? nomeCapturado.charAt(0).toUpperCase() + nomeCapturado.slice(1) : "amigo";
-
+            userName = extrairNome(fala);
 
             if(
                 fala.includes("edicarmen") ||
@@ -1007,9 +1038,13 @@ if(recognition){
 
             else{
 
+                let mensagemNome = userName 
+                    ? `legal te conhecer, ${userName}! Eu sou um protótipo de um projeto educacional` 
+                    : "legal te conhecer! Eu sou um protótipo de um projeto educacional";
+
                 falar(
 
-                    `legal te conhecer, ${userName}! Eu sou um protótipo de um projeto educacional`,
+                    mensagemNome,
 
                     ()=>{
 
@@ -1031,6 +1066,8 @@ if(recognition){
         else if(
             step==="rafael_check"
         ){
+
+            tocarSomRobotico('processando');
 
             if(
                 fala.includes("professor")
@@ -1095,6 +1132,8 @@ if(recognition){
         else if(
             step==="decisao_piada"
         ){
+
+            tocarSomRobotico('processando');
 
             if(
                 fala.includes("sim") ||
@@ -1205,6 +1244,8 @@ window.addEventListener(
         manterTelaAcesa();
 
         entrarTelaCheia();
+
+        inicializarAudioContext();
 
     },
     {once:true}
