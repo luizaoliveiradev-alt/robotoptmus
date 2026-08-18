@@ -2,18 +2,20 @@
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 
 <meta name="viewport"
       content="width=device-width,
-               initial-scale=1.0,
-               maximum-scale=1.0,
-               user-scalable=no,
-               viewport-fit=cover">
+      initial-scale=1.0,
+      maximum-scale=1.0,
+      user-scalable=no,
+      viewport-fit=cover">
 
 <meta name="theme-color" content="#050505">
 
 <meta name="mobile-web-app-capable" content="yes">
+
 <meta name="apple-mobile-web-app-capable" content="yes">
 
 <meta name="apple-mobile-web-app-status-bar-style"
@@ -21,10 +23,11 @@
 
 <title>Robô Interativo</title>
 
+
 <style>
 
 /* =========================================================
-   CONFIGURAÇÃO GERAL
+   RESET
 ========================================================= */
 
 * {
@@ -81,7 +84,7 @@ body {
 
     background: #000;
 
-    color: white;
+    color: #fff;
 
     z-index: 999999;
 
@@ -99,16 +102,16 @@ body {
 
 #orientation-overlay div {
 
-    font-size: 50px;
+    font-size: 55px;
 
     margin-bottom: 15px;
 }
 
 #orientation-overlay p {
 
-    font-size: 18px;
-
     margin: 0;
+
+    font-size: 18px;
 }
 
 @media (orientation: portrait) {
@@ -136,10 +139,10 @@ body {
     justify-content: center;
 
     animation:
-        floating 5s ease-in-out infinite;
+        flutuar 5s ease-in-out infinite;
 }
 
-@keyframes floating {
+@keyframes flutuar {
 
     0%,
     100% {
@@ -173,6 +176,7 @@ body {
         clamp(60px, 11vw, 160px);
 }
 
+
 .eye {
 
     width:
@@ -189,18 +193,18 @@ body {
     box-shadow:
 
         0 0 30px
-        rgba(240,250,255,0.15),
+        rgba(240,250,255,.15),
 
         0 0 70px
-        rgba(240,250,255,0.07);
+        rgba(240,250,255,.07);
 
     transition:
 
-        all 0.4s
+        all .4s
         cubic-bezier(
-            0.175,
-            0.885,
-            0.32,
+            .175,
+            .885,
+            .32,
             1.275
         );
 }
@@ -213,11 +217,11 @@ body {
 .sleeping .eye {
 
     width:
-        clamp(140px, 18vw, 260px);
+        clamp(140px,18vw,260px);
 
     height: 8px;
 
-    opacity: 0.2;
+    opacity: .2;
 
     border-radius: 4px;
 }
@@ -230,12 +234,12 @@ body {
 .happy .eye {
 
     height:
-        clamp(70px, 10vw, 130px);
+        clamp(70px,10vw,130px);
 
     background: transparent;
 
     border-top:
-        clamp(18px, 2.5vw, 30px)
+        clamp(18px,2.5vw,30px)
         solid
         #f0faff;
 
@@ -256,19 +260,20 @@ body {
 .thinking #eye-l {
 
     width:
-        clamp(170px, 22vw, 330px);
+        clamp(170px,22vw,330px);
 
     height:
-        clamp(150px, 20vw, 290px);
+        clamp(150px,20vw,290px);
 }
+
 
 .thinking #eye-r {
 
     width:
-        clamp(170px, 22vw, 330px);
+        clamp(170px,22vw,330px);
 
     height:
-        clamp(100px, 15vw, 210px);
+        clamp(100px,15vw,210px);
 }
 
 
@@ -279,10 +284,10 @@ body {
 .laughing .eye {
 
     width:
-        clamp(170px, 22vw, 330px);
+        clamp(170px,22vw,330px);
 
     height:
-        clamp(40px, 6vw, 75px);
+        clamp(40px,6vw,75px);
 
     transform:
         skewX(10deg);
@@ -301,18 +306,20 @@ body {
 
 
 /* =========================================================
-   TELAS BAIXAS
+   CELULAR DEITADO
 ========================================================= */
 
-@media (max-height: 500px)
-and (orientation: landscape) {
+@media (max-height:500px)
+and (orientation:landscape) {
 
     .eye {
 
         width: 20vw;
+
         height: 17vw;
 
         max-width: 300px;
+
         max-height: 240px;
     }
 
@@ -323,6 +330,7 @@ and (orientation: landscape) {
 }
 
 </style>
+
 </head>
 
 
@@ -345,7 +353,7 @@ and (orientation: landscape) {
 
 
 <!-- =======================================================
-     OLHOS
+     ROSTO
 ======================================================= -->
 
 <div class="face-container">
@@ -373,29 +381,44 @@ and (orientation: landscape) {
    VARIÁVEIS
 ========================================================= */
 
-const body = document.body;
+const body =
+    document.body;
 
-let recognition = null;
 
-let recognitionActive = false;
+let recognition =
+    null;
 
-let robotSpeaking = false;
 
-let startingRecognition = false;
+let recognitionActive =
+    false;
 
-let robotAwake = false;
 
-let step = "nome";
+let recognitionStarting =
+    false;
 
-let userName = "";
 
-let wakeLock = null;
+let robotSpeaking =
+    false;
 
-let voices = [];
+
+let robotAwake =
+    false;
+
+
+let step =
+    "nome";
+
+
+let wakeLock =
+    null;
+
+
+let voices =
+    [];
 
 
 /* =========================================================
-   RECONHECIMENTO DE VOZ
+   SPEECH RECOGNITION
 ========================================================= */
 
 const SpeechRecognition =
@@ -419,6 +442,7 @@ if (SpeechRecognition) {
 
     recognition.maxAlternatives =
         1;
+
 }
 
 
@@ -429,14 +453,22 @@ if (SpeechRecognition) {
 function carregarVozes() {
 
     voices =
-        window.speechSynthesis.getVoices();
+        window.speechSynthesis
+            .getVoices();
+
 }
+
 
 carregarVozes();
 
-if ("onvoiceschanged" in speechSynthesis) {
 
-    speechSynthesis.onvoiceschanged =
+if (
+    "onvoiceschanged"
+    in window.speechSynthesis
+) {
+
+    window.speechSynthesis
+        .onvoiceschanged =
         carregarVozes;
 }
 
@@ -450,78 +482,35 @@ function escolherVoz() {
     carregarVozes();
 
     /*
-     * Procuramos primeiro uma voz
-     * brasileira disponível.
+     * Tenta encontrar uma voz
+     * portuguesa/brasileira.
      */
 
     let voz =
-        voices.find(v =>
-            v.lang &&
-            v.lang.toLowerCase() === "pt-br"
+        voices.find(
+            v =>
+                v.lang &&
+                v.lang
+                    .toLowerCase()
+                    .includes("pt-br")
         );
 
-    /*
-     * Caso não exista exatamente
-     * pt-BR, procura português.
-     */
 
     if (!voz) {
 
         voz =
-            voices.find(v =>
-                v.lang &&
-                v.lang
-                    .toLowerCase()
-                    .startsWith("pt")
+            voices.find(
+                v =>
+                    v.lang &&
+                    v.lang
+                        .toLowerCase()
+                        .startsWith("pt")
             );
+
     }
+
 
     return voz || null;
-}
-
-
-/* =========================================================
-   TELA SEMPRE ACESA
-========================================================= */
-
-async function manterTelaAcesa() {
-
-    try {
-
-        if (!("wakeLock" in navigator)) {
-
-            console.log(
-                "Wake Lock não disponível."
-            );
-
-            return;
-        }
-
-        if (
-            wakeLock &&
-            !wakeLock.released
-        ) {
-
-            return;
-        }
-
-        wakeLock =
-            await navigator.wakeLock.request(
-                "screen"
-            );
-
-        console.log(
-            "Tela mantida acesa."
-        );
-
-    }
-    catch (erro) {
-
-        console.log(
-            "Wake Lock:",
-            erro
-        );
-    }
 }
 
 
@@ -529,30 +518,59 @@ async function manterTelaAcesa() {
    FULLSCREEN
 ========================================================= */
 
-async function entrarFullscreen() {
+function entrarFullscreen() {
+
+    /*
+     * IMPORTANTE:
+     *
+     * Esta função NÃO é async.
+     *
+     * Ela precisa ser chamada
+     * diretamente dentro do toque.
+     */
 
     try {
 
-        if (document.fullscreenElement) {
+        if (
+            document.fullscreenElement
+        ) {
 
             return;
         }
 
+
         const elemento =
             document.documentElement;
+
 
         if (
             elemento.requestFullscreen
         ) {
 
-            await elemento.requestFullscreen();
+            elemento.requestFullscreen()
+                .then(() => {
 
-            console.log(
-                "Fullscreen ativado."
-            );
+                    console.log(
+                        "FULLSCREEN ATIVADO"
+                    );
+
+                })
+                .catch(erro => {
+
+                    console.log(
+                        "Fullscreen recusado:",
+                        erro
+                    );
+
+                });
 
             return;
         }
+
+
+        /*
+         * Compatibilidade WebKit.
+         */
 
         if (
             elemento.webkitRequestFullscreen
@@ -560,44 +578,70 @@ async function entrarFullscreen() {
 
             elemento.webkitRequestFullscreen();
 
-            console.log(
-                "Fullscreen WebKit ativado."
-            );
         }
 
     }
     catch (erro) {
 
-        /*
-         * Se o navegador bloquear,
-         * o robô continua funcionando.
-         */
-
         console.log(
-            "Fullscreen não permitido:",
+            "Fullscreen:",
             erro
         );
+
     }
+
 }
 
 
 /* =========================================================
-   ATIVAÇÃO DO MODO APRESENTAÇÃO
+   WAKE LOCK
 ========================================================= */
 
-function prepararTela() {
+function manterTelaAcesa() {
 
-    /*
-     * Não usamos await aqui.
-     *
-     * Isso é proposital para que
-     * o navegador reconheça a chamada
-     * como resultado direto do toque.
-     */
+    if (
+        !("wakeLock" in navigator)
+    ) {
 
-    entrarFullscreen();
+        console.log(
+            "Wake Lock não disponível."
+        );
 
-    manterTelaAcesa();
+        return;
+    }
+
+
+    if (
+        wakeLock &&
+        !wakeLock.released
+    ) {
+
+        return;
+    }
+
+
+    navigator.wakeLock
+        .request("screen")
+
+        .then(lock => {
+
+            wakeLock =
+                lock;
+
+            console.log(
+                "TELA MANTIDA ACESA"
+            );
+
+        })
+
+        .catch(erro => {
+
+            console.log(
+                "Wake Lock:",
+                erro
+            );
+
+        });
 }
 
 
@@ -615,7 +659,9 @@ document.addEventListener(
         ) {
 
             manterTelaAcesa();
+
         }
+
     }
 );
 
@@ -628,44 +674,75 @@ function iniciarMicrofone() {
 
     if (!recognition) {
 
-        console.log(
-            "Reconhecimento de voz não disponível."
+        alert(
+            "Este navegador não suporta reconhecimento de voz."
         );
 
         return;
+
     }
 
-    if (recognitionActive) {
+
+    if (
+        recognitionActive ||
+        recognitionStarting
+    ) {
 
         return;
+
     }
 
-    if (startingRecognition) {
 
-        return;
-    }
+    recognitionStarting =
+        true;
 
-    startingRecognition = true;
 
     try {
 
         recognition.start();
 
     }
+
     catch (erro) {
 
+        recognitionStarting =
+            false;
+
         console.log(
-            "Microfone:",
+            "Erro ao iniciar microfone:",
             erro
         );
 
-        startingRecognition = false;
     }
+
 }
 
 
 /* =========================================================
-   FALA
+   PARAR MICROFONE
+========================================================= */
+
+function pararMicrofone() {
+
+    if (!recognition) {
+
+        return;
+    }
+
+
+    try {
+
+        recognition.stop();
+
+    }
+
+    catch (e) {}
+
+}
+
+
+/* =========================================================
+   FALAR
 ========================================================= */
 
 function falar(
@@ -673,33 +750,23 @@ function falar(
     callback
 ) {
 
-    robotSpeaking = true;
+    robotSpeaking =
+        true;
 
 
     /*
-     * Para o reconhecimento enquanto
-     * o robô está falando.
+     * Para o microfone ANTES
+     * do robô começar a falar.
      */
 
-    if (
-        recognition &&
-        recognitionActive
-    ) {
-
-        try {
-
-            recognition.stop();
-
-        }
-        catch (e) {}
-    }
+    pararMicrofone();
 
 
     /*
      * Cancela fala anterior.
      */
 
-    speechSynthesis.cancel();
+    window.speechSynthesis.cancel();
 
 
     const mensagem =
@@ -713,22 +780,17 @@ function falar(
 
 
     /*
-     * VOZ
-     *
-     * Não usamos pitch 0.2.
-     *
-     * Isso fica horrível em alguns
-     * celulares.
-     *
-     * 0.75 = mais grave
-     * 0.92 = mais lenta
+     * Voz mais grave,
+     * mas sem ficar monstruosa.
      */
 
     mensagem.pitch =
         0.75;
 
+
     mensagem.rate =
-        0.92;
+        0.90;
+
 
     mensagem.volume =
         1;
@@ -742,67 +804,75 @@ function falar(
 
         mensagem.voice =
             voz;
+
     }
 
 
-    mensagem.onstart = () => {
+    mensagem.onstart =
+        () => {
 
-        robotSpeaking =
-            true;
-    };
+            robotSpeaking =
+                true;
 
-
-    mensagem.onend = () => {
-
-        robotSpeaking =
-            false;
+        };
 
 
-        /*
-         * Só depois que o robô
-         * terminar de falar
-         * ativamos novamente
-         * o microfone.
-         */
+    mensagem.onend =
+        () => {
 
-        setTimeout(
-            () => {
+            robotSpeaking =
+                false;
 
-                if (
-                    recognitionActive &&
-                    !robotSpeaking
-                ) {
 
-                    iniciarMicrofone();
-                }
+            /*
+             * Só volta a ouvir
+             * DEPOIS que terminar.
+             */
 
-            },
-            600
+            if (
+                robotAwake
+            ) {
+
+                setTimeout(
+                    () => {
+
+                        iniciarMicrofone();
+
+                    },
+                    500
+                );
+
+            }
+
+
+            if (callback) {
+
+                callback();
+
+            }
+
+        };
+
+
+    mensagem.onerror =
+        () => {
+
+            robotSpeaking =
+                false;
+
+        };
+
+
+    window.speechSynthesis
+        .speak(
+            mensagem
         );
 
-
-        if (callback) {
-
-            callback();
-        }
-    };
-
-
-    mensagem.onerror = () => {
-
-        robotSpeaking =
-            false;
-    };
-
-
-    speechSynthesis.speak(
-        mensagem
-    );
 }
 
 
 /* =========================================================
-   NORMALIZAR TEXTO
+   NORMALIZAR
 ========================================================= */
 
 function normalizar(texto) {
@@ -824,6 +894,7 @@ function normalizar(texto) {
         )
 
         .trim();
+
 }
 
 
@@ -859,18 +930,16 @@ function extrairNome(fala) {
         texto.split(/\s+/);
 
 
-    return partes[0] || "";
+    return partes[0] || "amigo";
+
 }
 
 
 /* =========================================================
-   CONTINUAR DIÁLOGO
+   CONTINUAR
 ========================================================= */
 
 function continuarDialogo() {
-
-    step =
-        "decisao_piada";
 
     body.className =
         "awake";
@@ -886,18 +955,21 @@ function continuarDialogo() {
                 () => {
 
                     step =
-                        "decisao_piada";
+                        "piada";
+
                 }
+
             );
 
         },
         400
     );
+
 }
 
 
 /* =========================================================
-   PROCESSAR RAFAEL
+   RAFAEL
 ========================================================= */
 
 function processarRafael(
@@ -908,70 +980,78 @@ function processarRafael(
         normalizar(fala);
 
 
-    /* PROFESSOR */
-
     if (
-        texto.includes("professor")
+        texto.includes(
+            "professor"
+        )
     ) {
 
         body.className =
             "happy";
+
 
         falar(
 
             "Eaí meu, legal te conhecer!",
 
             continuarDialogo
+
         );
+
 
         return;
     }
 
 
-    /* COORDENADOR */
-
     if (
-        texto.includes("coordenador")
+        texto.includes(
+            "coordenador"
+        )
     ) {
 
         body.className =
             "happy";
+
 
         falar(
 
             "Legal te conhecer!",
 
             continuarDialogo
+
         );
+
 
         return;
     }
 
 
-    /* ALUNO */
-
     if (
-        texto.includes("aluno")
+        texto.includes(
+            "aluno"
+        )
     ) {
 
         body.className =
             "happy";
+
 
         falar(
 
             "Legal te conhecer!",
 
             continuarDialogo
+
         );
+
 
         return;
     }
 
-
-    /* NÃO ENTENDEU */
 
     body.className =
         "thinking";
+
 
     falar(
 
@@ -981,8 +1061,11 @@ function processarRafael(
 
             step =
                 "rafael";
+
         }
+
     );
+
 }
 
 
@@ -1001,11 +1084,6 @@ function contarPiada() {
         "Sabe por que o robô foi ao médico? Porque ele estava com um vírus! Rá! Rá! Rá! Rá!",
 
         () => {
-
-
-            /*
-             * EXPRESSÃO DE RISADA
-             */
 
             body.className =
                 "laughing";
@@ -1027,22 +1105,19 @@ function contarPiada() {
                             body.className =
                                 "sleeping";
 
+
                             robotAwake =
                                 false;
+
 
                             recognitionActive =
                                 false;
 
-                            if (recognition) {
 
-                                try {
+                            pararMicrofone();
 
-                                    recognition.stop();
-
-                                }
-                                catch (e) {}
-                            }
                         }
+
                     );
 
                 },
@@ -1050,7 +1125,9 @@ function contarPiada() {
             );
 
         }
+
     );
+
 }
 
 
@@ -1082,6 +1159,7 @@ setInterval(
                 },
                 150
             );
+
         }
 
     },
@@ -1090,18 +1168,19 @@ setInterval(
 
 
 /* =========================================================
-   ACORDAR ROBÔ
+   ACORDAR
 ========================================================= */
 
 function acordarRobo() {
 
     /*
-     * Evita acordar duas vezes.
+     * Evita múltiplas ativações.
      */
 
     if (robotAwake) {
 
         return;
+
     }
 
 
@@ -1109,106 +1188,107 @@ function acordarRobo() {
         true;
 
 
-    /*
-     * PRIMEIRA COISA:
-     *
-     * fullscreen + tela acesa.
-     */
-
-    prepararTela();
-
-
-    /*
-     * Visualmente acorda.
-     */
-
     body.className =
         "awake";
 
-
-    /*
-     * Reseta conversa.
-     */
 
     step =
         "nome";
 
 
-    userName =
-        "";
+    /*
+     * =====================================================
+     * ESSAS DUAS CHAMADAS ACONTECEM DIRETAMENTE
+     * NO TOQUE DO USUÁRIO.
+     * =====================================================
+     */
+
+    entrarFullscreen();
+
+    manterTelaAcesa();
 
 
     /*
-     * Marca reconhecimento como
-     * ativo antes da fala.
+     * =====================================================
+     * MICROFONE TAMBÉM É INICIADO DIRETAMENTE
+     * NO TOQUE.
      *
-     * Assim o onend da fala
-     * consegue iniciar o microfone.
+     * ISSO É O QUE ESTAVA FALTANDO.
+     * =====================================================
      */
 
     if (recognition) {
 
-        recognitionActive =
-            true;
+        iniciarMicrofone();
+
     }
 
 
     /*
-     * Fala PRIMEIRO.
+     * Depois fala.
      *
-     * Depois da fala o microfone
-     * será iniciado automaticamente.
+     * O falar() para o microfone enquanto
+     * a voz estiver falando.
+     *
+     * Quando terminar, ele volta a ouvir.
      */
 
-    falar(
+    setTimeout(
+        () => {
 
-        "Olá! Eu sou o robozinho. Qual o seu nome?"
+            falar(
+                "Olá! Eu sou o robozinho. Qual o seu nome?"
+            );
 
+        },
+        150
     );
+
 }
 
 
 /* =========================================================
-   TOQUE ÚNICO PARA ACORDAR
+   PRIMEIRO TOQUE
 ========================================================= */
 
 /*
- * USAMOS APENAS POINTERDOWN.
+ * SOMENTE UM EVENTO.
  *
- * Isso evita o problema da versão
- * anterior onde click + touchend
- * disparavam juntos.
+ * Nada de click + touchend.
  */
 
 document.addEventListener(
-    "pointerdown",
-    event => {
 
-        /*
-         * Somente primeiro toque/clique.
-         */
+    "pointerdown",
+
+    event => {
 
         if (
             event.pointerType ===
-                "mouse" ||
-            event.pointerType ===
                 "touch" ||
+
+            event.pointerType ===
+                "mouse" ||
+
             event.pointerType ===
                 "pen"
         ) {
 
             acordarRobo();
+
         }
 
     },
+
     {
         passive: true
     }
+
 );
 
 
 /* =========================================================
-   RECONHECIMENTO DE VOZ
+   RECONHECIMENTO
 ========================================================= */
 
 if (recognition) {
@@ -1217,24 +1297,34 @@ if (recognition) {
     recognition.onstart =
         () => {
 
-            startingRecognition =
+            recognitionStarting =
                 false;
 
             recognitionActive =
                 true;
 
+
             console.log(
-                "Microfone ligado."
+                "🎤 MICROFONE ATIVO"
             );
+
         };
 
 
     recognition.onresult =
         event => {
 
-            if (robotSpeaking) {
+            /*
+             * Nunca processa a fala
+             * do robô.
+             */
+
+            if (
+                robotSpeaking
+            ) {
 
                 return;
+
             }
 
 
@@ -1251,7 +1341,7 @@ if (recognition) {
 
 
             console.log(
-                "Pessoa disse:",
+                "Usuário:",
                 fala
             );
 
@@ -1271,9 +1361,7 @@ if (recognition) {
             ) {
 
 
-                /*
-                 * EDCARMEN / EDICARMEN
-                 */
+                /* EDCARMEN */
 
                 if (
 
@@ -1289,26 +1377,25 @@ if (recognition) {
 
                 ) {
 
-                    userName =
-                        "Edcarmen";
-
                     body.className =
                         "happy";
+
 
                     falar(
 
                         "Busquei aqui no meu banco de dados e vi que Edcarmen é coordenadora da escola Amácio Mazzaroppi.",
 
                         continuarDialogo
+
                     );
 
+
                     return;
+
                 }
 
 
-                /*
-                 * RAFAEL
-                 */
+                /* RAFAEL */
 
                 if (
                     texto.includes(
@@ -1316,11 +1403,9 @@ if (recognition) {
                     )
                 ) {
 
-                    userName =
-                        "Rafael";
-
                     body.className =
                         "thinking";
+
 
                     falar(
 
@@ -1330,16 +1415,18 @@ if (recognition) {
 
                             step =
                                 "rafael";
+
                         }
+
                     );
 
+
                     return;
+
                 }
 
 
-                /*
-                 * LARA
-                 */
+                /* LARA */
 
                 if (
                     texto.includes(
@@ -1347,38 +1434,30 @@ if (recognition) {
                     )
                 ) {
 
-                    userName =
-                        "Lara";
-
                     body.className =
                         "happy";
+
 
                     falar(
 
                         "Hi Teacher, nice to meet you!",
 
                         continuarDialogo
+
                     );
 
+
                     return;
+
                 }
 
 
-                /*
-                 * OUTROS NOMES
-                 */
+                /* OUTRO NOME */
 
-                userName =
+                const nome =
                     extrairNome(
                         fala
                     );
-
-
-                if (!userName) {
-
-                    userName =
-                        "amigo";
-                }
 
 
                 body.className =
@@ -1387,7 +1466,7 @@ if (recognition) {
 
                 falar(
 
-                    `Legal te conhecer, ${userName}! Eu sou um protótipo de um projeto educacional.`,
+                    `Legal te conhecer, ${nome}! Eu sou um protótipo de um projeto educacional.`,
 
                     () => {
 
@@ -1401,8 +1480,10 @@ if (recognition) {
                                     () => {
 
                                         step =
-                                            "decisao_piada";
+                                            "piada";
+
                                     }
+
                                 );
 
                             },
@@ -1410,9 +1491,12 @@ if (recognition) {
                         );
 
                     }
+
                 );
 
+
                 return;
+
             }
 
 
@@ -1428,7 +1512,9 @@ if (recognition) {
                     fala
                 );
 
+
                 return;
+
             }
 
 
@@ -1437,14 +1523,9 @@ if (recognition) {
             ================================================= */
 
             if (
-                step ===
-                "decisao_piada"
+                step === "piada"
             ) {
 
-
-                /*
-                 * SIM
-                 */
 
                 if (
 
@@ -1475,12 +1556,9 @@ if (recognition) {
                     contarPiada();
 
                     return;
+
                 }
 
-
-                /*
-                 * NÃO
-                 */
 
                 if (
 
@@ -1503,16 +1581,16 @@ if (recognition) {
                         () => {
 
                             contarPiada();
+
                         }
+
                     );
 
+
                     return;
+
                 }
 
-
-                /*
-                 * Qualquer outra resposta
-                 */
 
                 falar(
 
@@ -1521,28 +1599,38 @@ if (recognition) {
                     () => {
 
                         contarPiada();
+
                     }
+
                 );
+
             }
 
         };
 
 
+    /* =========================================================
+       MICROFONE TERMINOU
+    ========================================================= */
+
     recognition.onend =
         () => {
 
-            startingRecognition =
+            recognitionActive =
+                false;
+
+
+            recognitionStarting =
                 false;
 
 
             /*
-             * Se o robô ainda estiver
-             * conversando, liga novamente.
+             * Se o robô está acordado
+             * e não está falando,
+             * volta a ouvir.
              */
 
             if (
-
-                recognitionActive &&
 
                 robotAwake &&
 
@@ -1558,53 +1646,78 @@ if (recognition) {
                     },
                     500
                 );
+
             }
+
         };
 
+
+    /* =========================================================
+       ERRO
+    ========================================================= */
 
     recognition.onerror =
         event => {
 
-            startingRecognition =
+            recognitionActive =
                 false;
 
+            recognitionStarting =
+                false;
+
+
             console.log(
-                "Erro do microfone:",
+                "🎤 Erro:",
                 event.error
             );
 
 
             /*
-             * Não derruba o robô
-             * se o navegador der erro.
+             * Se for erro temporário,
+             * tenta novamente.
              */
 
             if (
-                event.error ===
-                    "not-allowed" ||
-                event.error ===
+
+                robotAwake &&
+
+                event.error !==
+                    "not-allowed" &&
+
+                event.error !==
                     "service-not-allowed"
+
             ) {
 
-                console.log(
-                    "Permissão de microfone necessária."
+                setTimeout(
+                    () => {
+
+                        if (
+                            !robotSpeaking
+                        ) {
+
+                            iniciarMicrofone();
+
+                        }
+
+                    },
+                    1000
                 );
+
             }
+
         };
+
 }
 
 
 /* =========================================================
-   BLOQUEAR ZOOM POR GESTO
+   DESABILITAR ZOOM
 ========================================================= */
 
 document.addEventListener(
     "gesturestart",
-    e => {
-
-        e.preventDefault();
-
-    },
+    e => e.preventDefault(),
     {
         passive: false
     }
@@ -1612,11 +1725,7 @@ document.addEventListener(
 
 document.addEventListener(
     "gesturechange",
-    e => {
-
-        e.preventDefault();
-
-    },
+    e => e.preventDefault(),
     {
         passive: false
     }
@@ -1624,11 +1733,7 @@ document.addEventListener(
 
 document.addEventListener(
     "gestureend",
-    e => {
-
-        e.preventDefault();
-
-    },
+    e => e.preventDefault(),
     {
         passive: false
     }
