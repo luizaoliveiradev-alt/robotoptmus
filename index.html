@@ -598,7 +598,7 @@ document.addEventListener(
 
 
 /* =========================================
-   FALAR — VOZ MAIS MASCULINA
+   FALAR — VOZ BEM GROSSA/MASCULINA
 ========================================= */
 
 function falar(texto,callback){
@@ -631,20 +631,18 @@ function falar(texto,callback){
 
 
     /*
-     * Voz mais masculina.
-     *
-     * Pitch baixo deixa a voz mais grave.
+     * Pitch 0.1 deixa a voz no tom mais grave/grosso
+     * possível suportado pelos navegadores mobile e desktop.
      */
 
-    msg.pitch=0.45;
+    msg.pitch=0.1;
 
 
     /*
-     * Mais lenta para dar
-     * personalidade de robô.
+     * Velocidade ligeiramente pausada para reforçar o tom grave.
      */
 
-    msg.rate=0.88;
+    msg.rate=0.85;
 
 
     msg.volume=1;
@@ -870,7 +868,12 @@ function irParaSegundaParte(){
 
         ()=>{
 
-            irParaTerceiraParte();
+            /* Pausa dramática de 1.5 segundos antes da 3ª parte */
+            setTimeout(()=>{
+
+                irParaTerceiraParte();
+
+            },1500);
 
         }
 
