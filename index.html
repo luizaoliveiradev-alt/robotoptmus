@@ -742,7 +742,7 @@ function contarPiada(){
 
                 falar(
 
-                    "O papo está bom, mas minha bateria está acabando, então vou indo, tchau tchau",
+                    "O papo está bom, mas vou deixar você conhecer meus colegas. Tchau e até a próxima!",
 
                     ()=>{
 
@@ -825,7 +825,7 @@ function acordarRobo(){
 
             falar(
 
-                "Olá! Eu sou o robozinho. Qual o seu nome?",
+                "Olá! Eu sou o robôzinho! Qual seu nome?",
 
                 ()=>{
 
@@ -861,47 +861,70 @@ window.addEventListener(
 
 
 /* =========================================
-   SEGUNDA PARTE DO DIÁLOGO
+   ORIENTAÇÕES E PROVÃO PAULISTA
 ========================================= */
 
-function irParaSegundaParte(){
+function darOrientacoes(){
 
-    step=3;
+    step="provao_check";
 
     body.className="awake";
 
     falar(
 
-        "Ei! Você sabe porque o curso técnico em Desenvolvimento de Sistemas é o melhor curso que você pode escolher? É um curso que trabalha principalmente o raciocinio lógico, ajudando seu desempenho em diferentes disciplinas. Além de outros beneficios",
-
-        ()=>{
-
-            setTimeout(()=>{
-
-                irParaTerceiraParte();
-
-            },1500);
-
-        }
+        "Primeiro, você sabe o que é o Provão Paulista?"
 
     );
 
 }
 
+function explicacaoProvao(){
 
-/* =========================================
-   TERCEIRA PARTE DO DIÁLOGO
-========================================= */
-
-function irParaTerceiraParte(){
-
-    step="decisao_piada";
+    step=0; // Desativa escuta no final do fluxo narrativo continuo
 
     body.className="awake";
 
     falar(
 
-        "E você aprende a criar projetos legais como eu... quer ouvir uma piada?"
+        "Muito bem, vamos lá, o Provão Paulista é uma avaliação anual pra estudantes do ensino médio, é uma forma de ingresso direto em universidades públicas do estado de São Paulo.",
+
+        ()=>{
+
+            setTimeout(()=>{
+
+                body.className="happy";
+
+                falar(
+
+                    "Nossos alunos programaram inteligências artificiais, como eu, para ensinar sobre alguns temas do Provão.",
+
+                    ()=>{
+
+                        setTimeout(()=>{
+
+                            body.className="awake";
+
+                            falar(
+
+                                "Vou pedir para vocês ficarem em silêncio, pois fomos programados com linguagem JavaScript e por isso nosso sistema é sensível a ruídos e falas. Além disso, posso contar uma piada?",
+
+                                ()=>{
+
+                                    step="decisao_piada";
+
+                                }
+
+                            );
+
+                        }, 1000);
+
+                    }
+
+                );
+
+            }, 1000);
+
+        }
 
     );
 
@@ -976,79 +999,62 @@ if(recognition){
 
             userName = extrairNome(fala);
 
+            let mensagemNome = userName 
+                ? `Legal te conhecer ${userName}! Seja bem vindo ao projeto do terceiro DS, antes de começarmos, posso te passar algumas orientações?` 
+                : "Legal te conhecer! Seja bem vindo ao projeto do terceiro DS, antes de começarmos, posso te passar algumas orientações?";
+
+            falar(
+
+                mensagemNome,
+
+                ()=>{
+
+                    step="decisao_orientacoes";
+
+                }
+
+            );
+
+        }
+
+
+        /* =====================================
+           DECISÃO DAS ORIENTAÇÕES
+        ===================================== */
+
+        else if(step==="decisao_orientacoes"){
+
+            tocarSomRobotico('processando');
+
             if(
-                fala.includes("edicarmen") ||
-                fala.includes("edcarmen")
+                fala.includes("sim") ||
+                fala.includes("pode") ||
+                fala.includes("claro") ||
+                fala.includes("com certeza")
             ){
 
-                falar(
-
-                    "Busquei aqui no meu banco de dados vi que Edcarmen é coordenadora da escola Amácio Mazzaroppi",
-
-                    ()=>{
-
-                        irParaSegundaParte();
-
-                    }
-
-                );
+                darOrientacoes();
 
             }
 
-
             else if(
-                fala.includes("rafael")
+                fala.includes("não") ||
+                fala.includes("nao")
             ){
 
                 body.className="thinking";
 
                 falar(
 
-                    "Busquei aqui no meu banco de dados e vi que existe Rafael aluno, Rafael professor e Rafael coordenador. Qual você é?",
+                    "vou te passar mesmo assim!",
 
                     ()=>{
 
-                        step="rafael_check";
+                        setTimeout(()=>{
 
-                    }
+                            darOrientacoes();
 
-                );
-
-            }
-
-
-            else if(
-                fala.includes("lara")
-            ){
-
-                falar(
-
-                    "Hi Teacher, nice to meet you!",
-
-                    ()=>{
-
-                        irParaSegundaParte();
-
-                    }
-
-                );
-
-            }
-
-
-            else{
-
-                let mensagemNome = userName 
-                    ? `legal te conhecer, ${userName}! Eu sou um protótipo de um projeto educacional` 
-                    : "legal te conhecer! Eu sou um protótipo de um projeto educacional";
-
-                falar(
-
-                    mensagemNome,
-
-                    ()=>{
-
-                        irParaSegundaParte();
+                        }, 1000);
 
                     }
 
@@ -1060,73 +1066,20 @@ if(recognition){
 
 
         /* =====================================
-           RAFAEL CHECK
+           RESPOSTA DO PROVÃO PAULISTA
         ===================================== */
 
-        else if(
-            step==="rafael_check"
-        ){
+        else if(step==="provao_check"){
 
             tocarSomRobotico('processando');
 
-            if(
-                fala.includes("professor")
-            ){
-
-                falar(
-
-                    "Eai meu",
-
-                    ()=>{
-
-                        irParaSegundaParte();
-
-                    }
-
-                );
-
-            }
-
-            else if(
-                fala.includes("coordenador") ||
-                fala.includes("aluno")
-            ){
-
-                falar(
-
-                    "legal te conhecer",
-
-                    ()=>{
-
-                        irParaSegundaParte();
-
-                    }
-
-                );
-
-            }
-
-            else{
-
-                falar(
-
-                    "legal te conhecer",
-
-                    ()=>{
-
-                        irParaSegundaParte();
-
-                    }
-
-                );
-
-            }
+            explicacaoProvao();
 
         }
 
 
         /* =====================================
-           TERCEIRA PARTE (PIADA)
+           DECISÃO DA PIADA
         ===================================== */
 
         else if(
@@ -1138,7 +1091,9 @@ if(recognition){
             if(
                 fala.includes("sim") ||
                 fala.includes("quero") ||
-                fala.includes("pode")
+                fala.includes("pode") ||
+                fala.includes("pode contar") ||
+                fala.includes("conta")
             ){
 
                 contarPiada();
@@ -1149,6 +1104,8 @@ if(recognition){
                 fala.includes("não") ||
                 fala.includes("nao")
             ){
+
+                body.className="thinking";
 
                 falar(
 
