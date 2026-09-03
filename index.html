@@ -31,9 +31,9 @@ html,
 body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    /* 100vh em mobile costuma renderizar ATRÁS da barra, 100dvh e height fixo resolvem */
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
     min-height: 100dvh;
     background: var(--dark-bg);
     overflow: hidden;
@@ -107,6 +107,7 @@ body {
     align-items:center;
     width:100vw;
     height:100vh;
+    height:100dvh;
     animation:float 5s ease-in-out infinite;
 }
 
@@ -500,36 +501,35 @@ if(recognition){
 function forcarModoFullscreen() {
     const doc = document.documentElement;
 
-    // Tenta API Nativa (Android Chrome / Edge / Opera)
-    if (doc.requestFullscreen) {
-        doc.requestFullscreen().catch(()=>{});
-    } else if (doc.webkitRequestFullscreen) {
-        doc.webkitRequestFullscreen();
-    } else if (doc.msRequestFullscreen) {
-        doc.msRequestFullscreen();
+    // Tenta API Nativa (Android Chrome / Edge / Opera / Desktop)
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (doc.requestFullscreen) {
+            doc.requestFullscreen().catch(()=>{});
+        } else if (doc.webkitRequestFullscreen) {
+            doc.webkitRequestFullscreen();
+        } else if (doc.msRequestFullscreen) {
+            doc.msRequestFullscreen();
+        }
     }
 
-    // Truque para esconder a barra de navegadores móveis estilo Safari/Chrome iOS
+    // Truque para esconder a barra em navegadores iOS/Safari
     setTimeout(() => {
         window.scrollTo(0, 1);
     }, 100);
 }
 
-// O gatilho OBRIGATÓRIO de interativo do usuário para conceder Tela Cheia
-document.getElementById("btn-fullscreen").addEventListener("click", (e)=>{
-    e.stopPropagation();
+function iniciarExperiencia(e) {
+    if (e) e.stopPropagation();
     forcarModoFullscreen();
     manterTelaAcesa();
     inicializarAudioContext();
     acordarRobo();
-});
+}
 
-window.addEventListener("click", ()=>{
-    forcarModoFullscreen();
-    manterTelaAcesa();
-    inicializarAudioContext();
-    acordarRobo();
-}, {once:true});
+// Ativa Fullscreen no clique do botão ou em qualquer toque/clique na página
+document.getElementById("btn-fullscreen").addEventListener("click", iniciarExperiencia);
+window.addEventListener("click", iniciarExperiencia);
+window.addEventListener("touchstart", iniciarExperiencia);
 
 // Dispara redimensionamento quando gira a tela
 window.addEventListener("orientationchange", ()=>{
