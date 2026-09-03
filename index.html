@@ -65,14 +65,28 @@ body {
     align-items: center;
     text-align: center;
     font-family: Arial,sans-serif;
+    padding: 20px;
 }
 
 #orientation-overlay div {
     font-size: 50px;
+    margin-bottom: 10px;
 }
 
 #orientation-overlay p {
     font-size: 18px;
+    margin-bottom: 20px;
+}
+
+#btn-fullscreen {
+    background: #f0faff;
+    color: #000;
+    border: none;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 25px;
+    cursor: pointer;
 }
 
 @media (orientation:portrait) {
@@ -246,14 +260,13 @@ body {
 </head>
 
 
-<body class="sleeping">
+<body class="awake">
 
 
 <div id="orientation-overlay">
     <div>📱🔄</div>
-    <p>
-        Gire o dispositivo para deitado.
-    </p>
+    <p>Gire o dispositivo para a horizontal para continuar.</p>
+    <button id="btn-fullscreen">Entrar em Tela Cheia</button>
 </div>
 
 
@@ -545,7 +558,7 @@ setInterval(()=>{
 
 
 /* =========================================
-   ACORDAR
+   ACORDAR / INICIAR
 ========================================= */
 
 function acordarRobo(){
@@ -553,7 +566,7 @@ function acordarRobo(){
     inicializarAudioContext();
 
     if(!recognitionActive && recognition){
-        body.className="curious"; // Cara de curioso no início
+        body.className="curious";
         recognitionActive=true;
 
         try{
@@ -628,7 +641,6 @@ if(recognition){
             falar(
                 mensagemNome,
                 ()=>{
-                    // Espera um segundo após falar o nome
                     setTimeout(()=>{
                         falar(
                             "Você sabe porque o curso de DS é uma boa opção?",
@@ -641,17 +653,15 @@ if(recognition){
             );
         }
 
-        /* STEP: RESPOSTA SOBRE DS (SIM OU NÃO) */
+        /* STEP: RESPOSTA SOBRE DS */
         else if(step==="pergunta_ds"){
             tocarSomRobotico('processando');
 
-            // Muda para sorrindo/olhos fechados durante a explicação
             body.className="happy";
 
             falar(
                 "No curso de Desenvolvimento de Sistemas você trabalha muito o seu raciocínio lógico, aprende diversas linguagens de programação e faz projetos legais, assim como eu!",
                 ()=>{
-                    // Espera um segundo
                     setTimeout(()=>{
                         body.className="curious";
                         falar(
@@ -709,23 +719,22 @@ if(recognition){
 
 
 /* =========================================
-   TELA CHEIA (AO CLICAR E AO VIRAR A TELA)
+   MÉTODO COMPATÍVEL DE TELA CHEIA (CROSS-BROWSER)
 ========================================= */
 
-async function entrarTelaCheia(){
-    try{
-        if(
-            document.documentElement.requestFullscreen &&
-            !document.fullscreenElement
-        ){
-            await document.documentElement.requestFullscreen();
-        }
-    }catch(e){
-        console.log("Tela cheia não disponível.");
+function entrarTelaCheia(){
+    const elem = document.documentElement;
+
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(()=>{});
+    } else if (elem.webkitRequestFullscreen) { /* Safari / iOS */
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
     }
 }
 
-// Entra em tela cheia no primeiro clique
+// Ao clicar na tela principal
 window.addEventListener("click", ()=>{
     manterTelaAcesa();
     entrarTelaCheia();
@@ -733,7 +742,16 @@ window.addEventListener("click", ()=>{
     acordarRobo();
 }, {once:true});
 
-// Entra em tela cheia automaticamente ao virar para a horizontal
+// Botão de tela cheia no overlay de orientação
+document.getElementById("btn-fullscreen").addEventListener("click", (e)=>{
+    e.stopPropagation();
+    entrarTelaCheia();
+    manterTelaAcesa();
+    inicializarAudioContext();
+    acordarRobo();
+});
+
+// Detecta mudança de orientação
 function verificarOrientacaoETelaCheia() {
     if (window.matchMedia("(orientation: landscape)").matches) {
         entrarTelaCheia();
@@ -741,7 +759,7 @@ function verificarOrientacaoETelaCheia() {
 }
 
 window.addEventListener("orientationchange", ()=>{
-    setTimeout(verificarOrientacaoETelaCheia, 200);
+    setTimeout(verificarOrientacaoETelaCheia, 300);
 });
 
 window.addEventListener("resize", ()=>{
