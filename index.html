@@ -29,35 +29,23 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 
 html,
 body {
-
     margin: 0;
     padding: 0;
-
     width: 100%;
     height: 100%;
-
     background: var(--dark-bg);
-
     overflow: hidden;
-
     touch-action: manipulation;
-
     overscroll-behavior: none;
-
     user-select: none;
     -webkit-user-select: none;
-
 }
 
 body {
-
     display: flex;
-
     justify-content: center;
     align-items: center;
-
     min-height: 100dvh;
-
 }
 
 
@@ -66,51 +54,31 @@ body {
 ========================================= */
 
 #orientation-overlay {
-
     position: fixed;
-
     inset: 0;
-
     background: #000;
-
     color: white;
-
     z-index: 99999;
-
     display: none;
-
     flex-direction: column;
-
     justify-content: center;
-
     align-items: center;
-
     text-align: center;
-
     font-family: Arial,sans-serif;
-
 }
 
 #orientation-overlay div {
-
     font-size: 50px;
-
 }
 
 #orientation-overlay p {
-
     font-size: 18px;
-
 }
 
 @media (orientation:portrait) {
-
     #orientation-overlay {
-
         display:flex;
-
     }
-
 }
 
 
@@ -119,35 +87,21 @@ body {
 ========================================= */
 
 .face-container {
-
     display:flex;
-
     justify-content:center;
-
     align-items:center;
-
     width:100vw;
-
     height:100vh;
-
     animation:float 5s ease-in-out infinite;
-
 }
 
 @keyframes float {
-
     0%,100% {
-
         transform:translateY(0);
-
     }
-
     50% {
-
         transform:translateY(-12px);
-
     }
-
 }
 
 
@@ -156,45 +110,28 @@ body {
 ========================================= */
 
 .eyes-row {
-
     display:flex;
-
     align-items:center;
-
     justify-content:center;
-
     gap:clamp(60px,11vw,160px);
-
     width:100vw;
-
 }
 
-
 .eye {
-
     width:clamp(170px,22vw,330px);
-
     height:clamp(150px,20vw,290px);
-
     background:var(--eye-white);
-
     border-radius:80px;
-
     box-shadow:
-
         0 0 30px var(--glow-soft),
-
         0 0 70px rgba(240,250,255,0.07);
-
     transition:
-
         all .4s cubic-bezier(
             .175,
             .885,
             .32,
             1.275
         );
-
 }
 
 
@@ -203,42 +140,44 @@ body {
 ========================================= */
 
 .sleeping .eye {
-
     width:clamp(140px,18vw,260px);
-
     height:8px;
-
     opacity:.2;
-
     border-radius:4px;
-
 }
 
 
 /* =========================================
-   EXPRESSÃO FELIZ
+   EXPRESSÃO FELIZ / SORRINDO (Olhos Fechados)
 ========================================= */
 
 .happy .eye {
-
     height:clamp(70px,10vw,130px);
-
     background:transparent;
-
     border-top:
-
         clamp(18px,2.5vw,30px)
-
         solid var(--eye-white);
-
     border-radius:
-
         100px 100px 0 0;
-
     box-shadow:none;
-
     transform:translateY(25px);
+}
 
+
+/* =========================================
+   EXPRESSÃO CURIOSO
+========================================= */
+
+.curious #eye-l {
+    width:clamp(180px,24vw,340px);
+    height:clamp(180px,24vw,340px);
+    border-radius: 50%;
+}
+
+.curious #eye-r {
+    width:clamp(140px,18vw,260px);
+    height:clamp(120px,16vw,230px);
+    border-radius: 60px;
 }
 
 
@@ -247,19 +186,13 @@ body {
 ========================================= */
 
 .thinking #eye-l {
-
     width:clamp(170px,22vw,330px);
-
     height:clamp(150px,20vw,290px);
-
 }
 
 .thinking #eye-r {
-
     width:clamp(170px,22vw,330px);
-
     height:clamp(100px,15vw,210px);
-
 }
 
 
@@ -268,13 +201,9 @@ body {
 ========================================= */
 
 .laughing .eye {
-
     width:clamp(170px,22vw,330px);
-
     height:clamp(40px,6vw,75px);
-
     transform:skewX(10deg);
-
 }
 
 
@@ -283,9 +212,7 @@ body {
 ========================================= */
 
 .blink .eye {
-
     transform:scaleY(0)!important;
-
 }
 
 
@@ -294,42 +221,24 @@ body {
 ========================================= */
 
 @media (orientation:landscape) {
-
     .eye {
-
         width:22vw;
-
         height:20vw;
-
         max-width:330px;
-
         max-height:290px;
-
     }
-
 }
 
-
 @media (max-height:500px) and (orientation:landscape) {
-
     .eye {
-
         width:20vw;
-
         height:17vw;
-
         max-width:270px;
-
         max-height:225px;
-
     }
-
     .eyes-row {
-
         gap:10vw;
-
     }
-
 }
 
 </style>
@@ -341,50 +250,34 @@ body {
 
 
 <div id="orientation-overlay">
-
     <div>📱🔄</div>
-
     <p>
         Gire o dispositivo para deitado.
     </p>
-
 </div>
 
 
 <div class="face-container">
-
     <div class="eyes-row">
-
         <div id="eye-l" class="eye"></div>
-
         <div id="eye-r" class="eye"></div>
-
     </div>
-
 </div>
 
 
 <script>
-
 
 /* =========================================
    VARIÁVEIS
 ========================================= */
 
 const body=document.body;
-
 let recognitionActive=false;
-
 let robotSpeaking=false;
-
-let step=2;
-
+let step=1;
 let userName="";
-
 let wakeLock=null;
-
 let voices=[];
-
 let audioCtx=null;
 
 
@@ -454,29 +347,19 @@ function tocarSomRobotico(tipo) {
 ========================================= */
 
 const SpeechRecognition=
-
     window.SpeechRecognition ||
-
     window.webkitSpeechRecognition;
 
-
 const recognition=
-
     SpeechRecognition
         ? new SpeechRecognition()
         : null;
 
-
 if(recognition){
-
     recognition.lang="pt-BR";
-
     recognition.continuous=false;
-
     recognition.interimResults=false;
-
     recognition.maxAlternatives=1;
-
 }
 
 
@@ -485,20 +368,13 @@ if(recognition){
 ========================================= */
 
 function carregarVozes(){
-
-    voices=
-        window.speechSynthesis.getVoices();
-
+    voices=window.speechSynthesis.getVoices();
 }
 
 carregarVozes();
 
-
 if("onvoiceschanged" in window.speechSynthesis){
-
-    window.speechSynthesis.onvoiceschanged=
-        carregarVozes;
-
+    window.speechSynthesis.onvoiceschanged=carregarVozes;
 }
 
 
@@ -507,11 +383,8 @@ if("onvoiceschanged" in window.speechSynthesis){
 ========================================= */
 
 function encontrarMelhorVoz(){
-
     if(!voices.length){
-
         carregarVozes();
-
     }
 
     const preferidos = [
@@ -537,7 +410,6 @@ function encontrarMelhorVoz(){
     }
 
     return voz || null;
-
 }
 
 
@@ -546,63 +418,24 @@ function encontrarMelhorVoz(){
 ========================================= */
 
 async function manterTelaAcesa(){
-
     try{
-
         if("wakeLock" in navigator){
-
-            if(
-                wakeLock &&
-                !wakeLock.released
-            ){
-
+            if(wakeLock && !wakeLock.released){
                 return;
-
             }
-
-
-            wakeLock=
-
-                await navigator
-                    .wakeLock
-                    .request("screen");
-
-
-            console.log(
-                "Tela mantida acesa."
-            );
-
+            wakeLock=await navigator.wakeLock.request("screen");
         }
-
     }
-
     catch(e){
-
-        console.log(
-            "Wake Lock não disponível:",
-            e
-        );
-
+        console.log("Wake Lock não disponível:", e);
     }
-
 }
 
-
-document.addEventListener(
-    "visibilitychange",
-    ()=>{
-
-        if(
-            document.visibilityState===
-            "visible"
-        ){
-
-            manterTelaAcesa();
-
-        }
-
+document.addEventListener("visibilitychange", ()=>{
+    if(document.visibilityState==="visible"){
+        manterTelaAcesa();
     }
-);
+});
 
 
 /* =========================================
@@ -610,167 +443,90 @@ document.addEventListener(
 ========================================= */
 
 function falar(texto,callback){
-
     robotSpeaking=true;
-
-    /* Toca um bip de processamento robótico antes de começar a falar */
     tocarSomRobotico('bip');
 
-    if(
-        recognition &&
-        recognitionActive
-    ){
-
+    if(recognition && recognitionActive){
         try{
-
             recognition.stop();
-
         }catch(e){}
-
     }
-
 
     window.speechSynthesis.cancel();
 
-
-    const msg=
-        new SpeechSynthesisUtterance(texto);
-
-
+    const msg=new SpeechSynthesisUtterance(texto);
     msg.lang="pt-BR";
-
-
-    /* Pitch natural e limpo para evitar distorção vocal no mobile */
     msg.pitch=0.6;
-
-
-    /* Velocidade adaptada para soar computacional, sem embolar */
     msg.rate=0.9;
-
-
     msg.volume=1;
 
-
-    const voz=
-        encontrarMelhorVoz();
-
-
+    const voz=encontrarMelhorVoz();
     if(voz){
-
         msg.voice=voz;
-
     }
 
-
     msg.onstart=()=>{
-
         robotSpeaking=true;
-
     };
-
 
     msg.onend=()=>{
-
         robotSpeaking=false;
-
 
         setTimeout(()=>{
-
-            if(
-                recognition &&
-                recognitionActive
-            ){
-
+            if(recognition && recognitionActive){
                 try{
-
                     recognition.start();
-
                 }catch(e){}
-
             }
-
         },500);
 
-
         if(callback){
-
             callback();
-
         }
-
     };
-
 
     msg.onerror=()=>{
-
         robotSpeaking=false;
-
     };
 
-
-    /* Pequeno retardo para o bip inicial tocar limpo */
     setTimeout(() => {
         window.speechSynthesis.speak(msg);
     }, 150);
-
 }
 
 
 /* =========================================
-   PIADA
+   PIADA & ENCERRAMENTO
 ========================================= */
 
 function contarPiada(){
-
     body.className="awake";
 
-
     falar(
-
         "Sabe por que o robô foi ao médico? Porque ele estava com um vírus! Rá! Rá! Rá! Rá!",
-
         ()=>{
-
             body.className="laughing";
             tocarSomRobotico('processando');
 
-
             setTimeout(()=>{
-
                 body.className="awake";
 
-
                 falar(
-
                     "O papo está bom, mas vou deixar você conhecer meus colegas. Tchau e até a próxima!",
-
                     ()=>{
-
                         body.className="sleeping";
-
                         recognitionActive=false;
 
-
                         if(recognition){
-
                             try{
-
                                 recognition.stop();
-
                             }catch(e){}
-
                         }
-
                     }
-
                 );
-
             },2000);
-
         }
-
     );
-
 }
 
 
@@ -779,22 +535,12 @@ function contarPiada(){
 ========================================= */
 
 setInterval(()=>{
-
-    if(
-        !body.classList.contains("sleeping")
-    ){
-
+    if(!body.classList.contains("sleeping")){
         body.classList.add("blink");
-
-
         setTimeout(()=>{
-
             body.classList.remove("blink");
-
         },150);
-
     }
-
 },4000);
 
 
@@ -803,131 +549,28 @@ setInterval(()=>{
 ========================================= */
 
 function acordarRobo(){
-
     manterTelaAcesa();
     inicializarAudioContext();
 
-
-    if(
-        !recognitionActive &&
-        recognition
-    ){
-
-        body.className="awake";
-
+    if(!recognitionActive && recognition){
+        body.className="curious"; // Cara de curioso no início
         recognitionActive=true;
 
-
         try{
-
             recognition.start();
 
-
             falar(
-
-                "Olá! Eu sou o robôzinho! Qual seu nome?",
-
+                "Olá! Eu sou um robôzinho! Qual seu nome?",
                 ()=>{
-
                     step=2;
-
                 }
-
             );
-
         }
-
         catch(error){
-
             console.log(error);
-
             recognitionActive=false;
-
         }
-
     }
-
-}
-
-
-/* =========================================
-   TOQUE
-========================================= */
-
-window.addEventListener(
-    "click",
-    acordarRobo
-);
-
-
-/* =========================================
-   ORIENTAÇÕES E PROVÃO PAULISTA
-========================================= */
-
-function darOrientacoes(){
-
-    step="provao_check";
-
-    body.className="awake";
-
-    falar(
-
-        "Primeiro, você sabe o que é o Provão Paulista?"
-
-    );
-
-}
-
-function explicacaoProvao(){
-
-    step=0; // Desativa escuta no final do fluxo narrativo continuo
-
-    body.className="awake";
-
-    falar(
-
-        "Muito bem, vamos lá, o Provão Paulista é uma avaliação anual pra estudantes do ensino médio, é uma forma de ingresso direto em universidades públicas do estado de São Paulo.",
-
-        ()=>{
-
-            setTimeout(()=>{
-
-                body.className="happy";
-
-                falar(
-
-                    "Nossos alunos programaram inteligências artificiais, como eu, para ensinar sobre alguns temas do Provão.",
-
-                    ()=>{
-
-                        setTimeout(()=>{
-
-                            body.className="awake";
-
-                            falar(
-
-                                "Vou pedir para vocês ficarem em silêncio, pois fomos programados com linguagem JavaScript e por isso nosso sistema é sensível a ruídos e falas. Além disso, posso contar uma piada?",
-
-                                ()=>{
-
-                                    step="decisao_piada";
-
-                                }
-
-                            );
-
-                        }, 1000);
-
-                    }
-
-                );
-
-            }, 1000);
-
-        }
-
-    );
-
 }
 
 
@@ -958,275 +601,163 @@ function extrairNome(fala) {
 
 
 /* =========================================
-   RECONHECIMENTO
+   RECONHECIMENTO DE VOZ (FLUXO DO DIÁLOGO)
 ========================================= */
 
 if(recognition){
 
     recognition.onresult=(event)=>{
+        if(robotSpeaking) return;
 
-        if(robotSpeaking){
+        const last=event.results.length-1;
+        const fala=event.results[last][0].transcript.toLowerCase().trim();
 
-            return;
+        console.log("Usuário:", fala);
 
-        }
-
-
-        const last=
-            event.results.length-1;
-
-
-        const fala=
-            event.results[last][0]
-                .transcript
-                .toLowerCase()
-                .trim();
-
-
-        console.log(
-            "Usuário:",
-            fala
-        );
-
-
-        /* =====================================
-           PRIMEIRA PARTE (NOME)
-        ===================================== */
-
+        /* STEP 2: RESPOSTA DO NOME */
         if(step===2){
-
             tocarSomRobotico('processando');
-
             userName = extrairNome(fala);
 
             let mensagemNome = userName 
-                ? `Legal te conhecer ${userName}! Seja bem vindo ao projeto do terceiro DS, antes de começarmos, posso te passar algumas orientações?` 
-                : "Legal te conhecer! Seja bem vindo ao projeto do terceiro DS, antes de começarmos, posso te passar algumas orientações?";
+                ? `Legal te conhecer, ${userName}!` 
+                : "Legal te conhecer!";
+
+            body.className="awake";
 
             falar(
-
                 mensagemNome,
-
                 ()=>{
-
-                    step="decisao_orientacoes";
-
+                    // Espera um segundo após falar o nome
+                    setTimeout(()=>{
+                        falar(
+                            "Você sabe porque o curso de DS é uma boa opção?",
+                            ()=>{
+                                step="pergunta_ds";
+                            }
+                        );
+                    }, 1000);
                 }
-
             );
-
         }
 
-
-        /* =====================================
-           DECISÃO DAS ORIENTAÇÕES
-        ===================================== */
-
-        else if(step==="decisao_orientacoes"){
-
+        /* STEP: RESPOSTA SOBRE DS (SIM OU NÃO) */
+        else if(step==="pergunta_ds"){
             tocarSomRobotico('processando');
 
-            if(
-                fala.includes("sim") ||
-                fala.includes("pode") ||
-                fala.includes("claro") ||
-                fala.includes("com certeza")
-            ){
+            // Muda para sorrindo/olhos fechados durante a explicação
+            body.className="happy";
 
-                darOrientacoes();
-
-            }
-
-            else if(
-                fala.includes("não") ||
-                fala.includes("nao")
-            ){
-
-                body.className="thinking";
-
-                falar(
-
-                    "vou te passar mesmo assim!",
-
-                    ()=>{
-
-                        setTimeout(()=>{
-
-                            darOrientacoes();
-
-                        }, 1000);
-
-                    }
-
-                );
-
-            }
-
+            falar(
+                "No curso de Desenvolvimento de Sistemas você trabalha muito o seu raciocínio lógico, aprende diversas linguagens de programação e faz projetos legais, assim como eu!",
+                ()=>{
+                    // Espera um segundo
+                    setTimeout(()=>{
+                        body.className="curious";
+                        falar(
+                            "Ei! Posso te contar uma piada?",
+                            ()=>{
+                                step="decisao_piada";
+                            }
+                        );
+                    }, 1000);
+                }
+            );
         }
 
-
-        /* =====================================
-           RESPOSTA DO PROVÃO PAULISTA
-        ===================================== */
-
-        else if(step==="provao_check"){
-
-            tocarSomRobotico('processando');
-
-            explicacaoProvao();
-
-        }
-
-
-        /* =====================================
-           DECISÃO DA PIADA
-        ===================================== */
-
-        else if(
-            step==="decisao_piada"
-        ){
-
+        /* STEP: DECISÃO DA PIADA */
+        else if(step==="decisao_piada"){
             tocarSomRobotico('processando');
 
             if(
                 fala.includes("sim") ||
                 fala.includes("quero") ||
                 fala.includes("pode") ||
-                fala.includes("pode contar") ||
                 fala.includes("conta")
             ){
-
                 contarPiada();
-
             }
-
             else if(
                 fala.includes("não") ||
                 fala.includes("nao")
             ){
-
                 body.className="thinking";
-
                 falar(
-
-                    "vou contar mesmo assim",
-
+                    "Vou contar mesmo assim!",
                     ()=>{
-
                         contarPiada();
-
                     }
-
                 );
-
             }
-
         }
-
     };
-
-
-    /* =========================================
-       MICROFONE TERMINOU
-    ========================================= */
 
     recognition.onend=()=>{
-
-        if(
-            recognitionActive &&
-            !robotSpeaking
-        ){
-
+        if(recognitionActive && !robotSpeaking){
             setTimeout(()=>{
-
                 try{
-
                     recognition.start();
-
                 }catch(e){}
-
             },300);
-
         }
-
     };
-
 
     recognition.onerror=(event)=>{
-
-        console.log(
-            "Erro:",
-            event.error
-        );
-
+        console.log("Erro:", event.error);
     };
-
 }
 
 
 /* =========================================
-   TELA CHEIA
+   TELA CHEIA (AO CLICAR E AO VIRAR A TELA)
 ========================================= */
 
 async function entrarTelaCheia(){
-
     try{
-
         if(
             document.documentElement.requestFullscreen &&
             !document.fullscreenElement
         ){
-
-            await document
-                .documentElement
-                .requestFullscreen();
-
+            await document.documentElement.requestFullscreen();
         }
-
     }catch(e){
-
-        console.log(
-            "Tela cheia não disponível."
-        );
-
+        console.log("Tela cheia não disponível.");
     }
-
 }
 
+// Entra em tela cheia no primeiro clique
+window.addEventListener("click", ()=>{
+    manterTelaAcesa();
+    entrarTelaCheia();
+    inicializarAudioContext();
+    acordarRobo();
+}, {once:true});
 
-window.addEventListener(
-    "click",
-    ()=>{
-
-        manterTelaAcesa();
-
+// Entra em tela cheia automaticamente ao virar para a horizontal
+function verificarOrientacaoETelaCheia() {
+    if (window.matchMedia("(orientation: landscape)").matches) {
         entrarTelaCheia();
+    }
+}
 
-        inicializarAudioContext();
+window.addEventListener("orientationchange", ()=>{
+    setTimeout(verificarOrientacaoETelaCheia, 200);
+});
 
-    },
-    {once:true}
-);
+window.addEventListener("resize", ()=>{
+    if (window.innerWidth > window.innerHeight) {
+        entrarTelaCheia();
+    }
+});
 
 
 /* =========================================
    BLOQUEAR ZOOM
 ========================================= */
 
-document.addEventListener(
-    "gesturestart",
-    e=>e.preventDefault()
-);
-
-document.addEventListener(
-    "gesturechange",
-    e=>e.preventDefault()
-);
-
-document.addEventListener(
-    "gestureend",
-    e=>e.preventDefault()
-);
+document.addEventListener("gesturestart", e=>e.preventDefault());
+document.addEventListener("gesturechange", e=>e.preventDefault());
+document.addEventListener("gestureend", e=>e.preventDefault());
 
 </script>
 
