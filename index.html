@@ -3,6 +3,7 @@
 
 <head>
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
 <meta name="theme-color" content="#050505">
@@ -46,6 +47,11 @@ body {
     align-items: center;
 }
 
+
+/* =========================================
+   ORIENTAÇÃO E OVERLAY DE TELA CHEIA
+========================================= */
+
 #orientation-overlay {
     position: fixed;
     inset: 0;
@@ -57,7 +63,7 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    font-family: Arial,sans-serif;
+    font-family: Arial, sans-serif;
     padding: 20px;
 }
 
@@ -80,117 +86,149 @@ body {
     font-weight: bold;
     border-radius: 25px;
     cursor: pointer;
+    box-shadow: 0 0 15px rgba(240, 250, 255, 0.4);
 }
 
-@media (orientation:portrait) {
+@media (orientation: portrait) {
     #orientation-overlay {
-        display:flex;
+        display: flex;
     }
 }
 
+
+/* =========================================
+   ROSTO
+========================================= */
+
 .face-container {
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    width:100vw;
-    height:100vh;
-    height:100dvh;
-    animation:float 5s ease-in-out infinite;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    animation: float 5s ease-in-out infinite;
 }
 
 @keyframes float {
-    0%,100% { transform:translateY(0); }
-    50% { transform:translateY(-12px); }
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-12px);
+    }
 }
 
+
+/* =========================================
+   OLHOS
+========================================= */
+
 .eyes-row {
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:clamp(60px,11vw,160px);
-    width:100vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(60px, 11vw, 160px);
+    width: 100vw;
 }
 
 .eye {
-    width:clamp(170px,22vw,330px);
-    height:clamp(150px,20vw,290px);
-    background:var(--eye-white);
-    border-radius:80px;
-    box-shadow: 0 0 30px var(--glow-soft), 0 0 70px rgba(240,250,255,0.07);
+    width: clamp(170px, 22vw, 330px);
+    height: clamp(150px, 20vw, 290px);
+    background: var(--eye-white);
+    border-radius: 80px;
+    box-shadow:
+        0 0 30px var(--glow-soft),
+        0 0 70px rgba(240, 250, 255, 0.07);
     transition: all .4s cubic-bezier(.175, .885, .32, 1.275);
 }
 
+
+/* =========================================
+   EXPRESSÕES
+========================================= */
+
 .sleeping .eye {
-    width:clamp(140px,18vw,260px);
-    height:8px;
-    opacity:.2;
-    border-radius:4px;
+    width: clamp(140px, 18vw, 260px);
+    height: 8px;
+    opacity: .2;
+    border-radius: 4px;
 }
 
 .happy .eye {
-    height:clamp(70px,10vw,130px);
-    background:transparent;
-    border-top: clamp(18px,2.5vw,30px) solid var(--eye-white);
+    height: clamp(70px, 10vw, 130px);
+    background: transparent;
+    border-top: clamp(18px, 2.5vw, 30px) solid var(--eye-white);
     border-radius: 100px 100px 0 0;
-    box-shadow:none;
-    transform:translateY(25px);
+    box-shadow: none;
+    transform: translateY(25px);
 }
 
 .curious #eye-l {
-    width:clamp(180px,24vw,340px);
-    height:clamp(180px,24vw,340px);
+    width: clamp(180px, 24vw, 340px);
+    height: clamp(180px, 24vw, 340px);
     border-radius: 50%;
 }
 
 .curious #eye-r {
-    width:clamp(140px,18vw,260px);
-    height:clamp(120px,16vw,230px);
+    width: clamp(140px, 18vw, 260px);
+    height: clamp(120px, 16vw, 230px);
     border-radius: 60px;
 }
 
 .thinking #eye-l {
-    width:clamp(170px,22vw,330px);
-    height:clamp(150px,20vw,290px);
+    width: clamp(170px, 22vw, 330px);
+    height: clamp(150px, 20vw, 290px);
 }
 
 .thinking #eye-r {
-    width:clamp(170px,22vw,330px);
-    height:clamp(100px,15vw,210px);
+    width: clamp(170px, 22vw, 330px);
+    height: clamp(100px, 15vw, 210px);
 }
 
 .laughing .eye {
-    width:clamp(170px,22vw,330px);
-    height:clamp(40px,6vw,75px);
-    transform:skewX(10deg);
+    width: clamp(170px, 22vw, 330px);
+    height: clamp(40px, 6vw, 75px);
+    transform: skewX(10deg);
 }
 
 .blink .eye {
-    transform:scaleY(0)!important;
+    transform: scaleY(0) !important;
 }
 
-@media (orientation:landscape) {
+
+/* =========================================
+   RESPONSIVIDADE
+========================================= */
+
+@media (orientation: landscape) {
     .eye {
-        width:22vw;
-        height:20vw;
-        max-width:330px;
-        max-height:290px;
+        width: 22vw;
+        height: 20vw;
+        max-width: 330px;
+        max-height: 290px;
     }
 }
 
-@media (max-height:500px) and (orientation:landscape) {
+@media (max-height: 500px) and (orientation: landscape) {
     .eye {
-        width:20vw;
-        height:17vw;
-        max-width:270px;
-        max-height:225px;
+        width: 20vw;
+        height: 17vw;
+        max-width: 270px;
+        max-height: 225px;
     }
-    .eyes-row { gap:10vw; }
+    .eyes-row {
+        gap: 10vw;
+    }
 }
 
 </style>
+
 </head>
 
+
 <body class="awake">
+
 
 <div id="orientation-overlay">
     <div>📱🔄</div>
@@ -198,12 +236,14 @@ body {
     <button id="btn-fullscreen">CLIQUE AQUI PARA TELA CHEIA</button>
 </div>
 
+
 <div class="face-container">
     <div class="eyes-row">
         <div id="eye-l" class="eye"></div>
         <div id="eye-r" class="eye"></div>
     </div>
 </div>
+
 
 <script>
 
@@ -215,6 +255,11 @@ let userName = "";
 let wakeLock = null;
 let voices = [];
 let audioCtx = null;
+
+
+/* =========================================
+   ÁUDIO
+========================================= */
 
 function inicializarAudioContext() {
     if (!audioCtx) {
@@ -229,6 +274,7 @@ function tocarSomRobotico(tipo) {
     try {
         inicializarAudioContext();
         if (!audioCtx) return;
+
         const now = audioCtx.currentTime;
 
         if (tipo === 'bip') {
@@ -243,7 +289,8 @@ function tocarSomRobotico(tipo) {
             gain.connect(audioCtx.destination);
             osc.start(now);
             osc.stop(now + 0.15);
-        } else if (tipo === 'processando') {
+        } 
+        else if (tipo === 'processando') {
             for (let i = 0; i < 3; i++) {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -260,20 +307,27 @@ function tocarSomRobotico(tipo) {
     } catch(e){}
 }
 
+
+/* =========================================
+   RECONHECIMENTO & VOZ
+========================================= */
+
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = SpeechRecognition ? new SpeechRecognition() : null;
 
 if(recognition){
-    recognition.lang="pt-BR";
-    recognition.continuous=false;
-    recognition.interimResults=false;
-    recognition.maxAlternatives=1;
+    recognition.lang = "pt-BR";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
 }
 
-function carregarVozes(){ voices=window.speechSynthesis.getVoices(); }
+function carregarVozes(){
+    voices = window.speechSynthesis.getVoices();
+}
 carregarVozes();
 if("onvoiceschanged" in window.speechSynthesis){
-    window.speechSynthesis.onvoiceschanged=carregarVozes;
+    window.speechSynthesis.onvoiceschanged = carregarVozes;
 }
 
 function encontrarMelhorVoz(){
@@ -292,13 +346,13 @@ function encontrarMelhorVoz(){
 async function manterTelaAcesa(){
     try{
         if("wakeLock" in navigator && (!wakeLock || wakeLock.released)){
-            wakeLock=await navigator.wakeLock.request("screen");
+            wakeLock = await navigator.wakeLock.request("screen");
         }
     }catch(e){}
 }
 
-function falar(texto,callback){
-    robotSpeaking=true;
+function falar(texto, callback){
+    robotSpeaking = true;
     tocarSomRobotico('bip');
 
     if(recognition && recognitionActive){
@@ -307,26 +361,26 @@ function falar(texto,callback){
 
     window.speechSynthesis.cancel();
 
-    const msg=new SpeechSynthesisUtterance(texto);
-    msg.lang="pt-BR";
-    msg.pitch=0.6;
-    msg.rate=0.9;
-    msg.volume=1;
+    const msg = new SpeechSynthesisUtterance(texto);
+    msg.lang = "pt-BR";
+    msg.pitch = 0.6;
+    msg.rate = 0.9;
+    msg.volume = 1;
 
-    const voz=encontrarMelhorVoz();
-    if(voz) msg.voice=voz;
+    const voz = encontrarMelhorVoz();
+    if(voz) msg.voice = voz;
 
-    msg.onstart=()=>{ robotSpeaking=true; };
-    msg.onend=()=>{
-        robotSpeaking=false;
-        setTimeout(()=>{
+    msg.onstart = () => { robotSpeaking = true; };
+    msg.onend = () => {
+        robotSpeaking = false;
+        setTimeout(() => {
             if(recognition && recognitionActive){
                 try{ recognition.start(); }catch(e){}
             }
-        },500);
+        }, 500);
         if(callback) callback();
     };
-    msg.onerror=()=>{ robotSpeaking=false; };
+    msg.onerror = () => { robotSpeaking = false; };
 
     setTimeout(() => {
         window.speechSynthesis.speak(msg);
@@ -334,41 +388,41 @@ function falar(texto,callback){
 }
 
 function contarPiada(){
-    body.className="awake";
-    falar("Sabe por que o robô foi ao médico? Porque ele estava com um vírus! Rá! Rá! Rá! Rá!", ()=>{
-        body.className="laughing";
+    body.className = "awake";
+    falar("Sabe por que o robô foi ao médico? Porque ele estava com um vírus! Rá! Rá! Rá! Rá!", () => {
+        body.className = "laughing";
         tocarSomRobotico('processando');
-        setTimeout(()=>{
-            body.className="awake";
-            falar("O papo está bom, mas vou deixar você conhecer meus colegas. Tchau e até a próxima!", ()=>{
-                body.className="sleeping";
-                recognitionActive=false;
+        setTimeout(() => {
+            body.className = "awake";
+            falar("O papo está bom, mas vou deixar você conhecer meus colegas. Tchau e até a próxima!", () => {
+                body.className = "sleeping";
+                recognitionActive = false;
                 if(recognition){ try{ recognition.stop(); }catch(e){} }
             });
-        },2000);
+        }, 2000);
     });
 }
 
-setInterval(()=>{
+setInterval(() => {
     if(!body.classList.contains("sleeping")){
         body.classList.add("blink");
-        setTimeout(()=>{ body.classList.remove("blink"); },150);
+        setTimeout(() => { body.classList.remove("blink"); }, 150);
     }
-},4000);
+}, 4000);
 
 function acordarRobo(){
     manterTelaAcesa();
     inicializarAudioContext();
 
     if(!recognitionActive && recognition){
-        body.className="curious";
-        recognitionActive=true;
+        body.className = "curious";
+        recognitionActive = true;
 
         try{
             recognition.start();
-            falar("Olá! Eu sou um robôzinho! Qual seu nome?", ()=>{ step=2; });
+            falar("Olá! Eu sou um robôzinho! Qual seu nome?", () => { step = 2; });
         }catch(error){
-            recognitionActive=false;
+            recognitionActive = false;
         }
     }
 }
@@ -386,81 +440,104 @@ function extrairNome(fala) {
 }
 
 if(recognition){
-    recognition.onresult=(event)=>{
+    recognition.onresult = (event) => {
         if(robotSpeaking) return;
-        const last=event.results.length-1;
-        const fala=event.results[last][0].transcript.toLowerCase().trim();
+        const last = event.results.length - 1;
+        const fala = event.results[last][0].transcript.toLowerCase().trim();
 
-        if(step===2){
+        if(step === 2){
             tocarSomRobotico('processando');
             userName = extrairNome(fala);
             let mensagemNome = userName ? `Legal te conhecer, ${userName}!` : "Legal te conhecer!";
-            body.className="awake";
+            body.className = "awake";
 
-            falar(mensagemNome, ()=>{
-                setTimeout(()=>{
-                    falar("Você sabe porque o curso de DS é uma boa opção?", ()=>{ step="pergunta_ds"; });
+            falar(mensagemNome, () => {
+                setTimeout(() => {
+                    falar("Você sabe porque o curso de DS é uma boa opção?", () => { step = "pergunta_ds"; });
                 }, 1000);
             });
         }
-        else if(step==="pergunta_ds"){
+        else if(step === "pergunta_ds"){
             tocarSomRobotico('processando');
-            body.className="happy";
-            falar("No curso de Desenvolvimento de Sistemas você trabalha muito o seu raciocínio lógico, aprende diversas linguagens de programação e faz projetos legais, assim como eu!", ()=>{
-                setTimeout(()=>{
-                    body.className="curious";
-                    falar("Ei! Posso te contar uma piada?", ()=>{ step="decisao_piada"; });
+            body.className = "happy";
+            falar("No curso de Desenvolvimento de Sistemas você trabalha muito o seu raciocínio lógico, aprende diversas linguagens de programação e faz projetos legais, assim como eu!", () => {
+                setTimeout(() => {
+                    body.className = "curious";
+                    falar("Ei! Posso te contar uma piada?", () => { step = "decisao_piada"; });
                 }, 1000);
             });
         }
-        else if(step==="decisao_piada"){
+        else if(step === "decisao_piada"){
             tocarSomRobotico('processando');
             if(fala.includes("sim") || fala.includes("quero") || fala.includes("pode") || fala.includes("conta")){
                 contarPiada();
             } else if(fala.includes("não") || fala.includes("nao")){
-                body.className="thinking";
-                falar("Vou contar mesmo assim!", ()=>{ contarPiada(); });
+                body.className = "thinking";
+                falar("Vou contar mesmo assim!", () => { contarPiada(); });
             }
         }
     };
 
-    recognition.onend=()=>{
+    recognition.onend = () => {
         if(recognitionActive && !robotSpeaking){
-            setTimeout(()=>{ try{ recognition.start(); }catch(e){} },300);
+            setTimeout(() => { try{ recognition.start(); }catch(e){} }, 300);
         }
     };
 }
 
+
 /* =========================================
-   FORÇA TELA CHEIA VIA EVENTO DE PONTEIRO
+   MÉTODOS DE TELA CHEIA DO ROBÔCAIO
 ========================================= */
 
 function forcarModoFullscreen() {
-    const doc = document.documentElement;
-    const req = doc.requestFullscreen || doc.webkitRequestFullscreen || doc.msRequestFullscreen;
+    const elem = document.documentElement;
 
-    if (req) {
-        req.call(doc).catch(() => {});
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(() => {});
+    } else if (elem.webkitRequestFullscreen) { /* Safari / iOS / Chrome antigo */
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
     }
+
+    // Scroll para esconder barra de endereço em telas sensíveis ao toque
+    window.scrollTo(0, 1);
 }
 
-function acionarInterface(e) {
+function iniciarAplicação(e) {
+    if (e) e.preventDefault();
     forcarModoFullscreen();
     manterTelaAcesa();
     inicializarAudioContext();
     acordarRobo();
 }
 
-window.addEventListener('pointerdown', acionarInterface, { once: true });
-document.getElementById("btn-fullscreen").addEventListener('pointerdown', (e) => {
-    e.stopPropagation();
-    acionarInterface(e);
-});
+// Dispara o acionamento em múltiplos tipos de clique do usuário
+const btnFullscreen = document.getElementById("btn-fullscreen");
+
+btnFullscreen.addEventListener("click", iniciarAplicação);
+btnFullscreen.addEventListener("touchstart", iniciarAplicação);
+
+document.addEventListener("click", (e) => {
+    forcarModoFullscreen();
+    inicializarAudioContext();
+}, { once: true });
+
+document.addEventListener("touchstart", (e) => {
+    forcarModoFullscreen();
+    inicializarAudioContext();
+}, { once: true });
 
 window.addEventListener("orientationchange", () => {
-    setTimeout(forcarModoFullscreen, 300);
+    setTimeout(() => {
+        forcarModoFullscreen();
+    }, 200);
 });
 
+document.addEventListener("gesturestart", e => e.preventDefault());
+
 </script>
+
 </body>
 </html>
