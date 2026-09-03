@@ -3,15 +3,12 @@
 
 <head>
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
-<!-- Configurações para forçar modo APP (Sem barras) -->
 <meta name="theme-color" content="#050505">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="application-name" content="Robô">
 
 <title>Robô Interativo</title>
 
@@ -48,11 +45,6 @@ body {
     justify-content: center;
     align-items: center;
 }
-
-
-/* =========================================
-   ORIENTAÇÃO
-========================================= */
 
 #orientation-overlay {
     position: fixed;
@@ -96,11 +88,6 @@ body {
     }
 }
 
-
-/* =========================================
-   ROSTO
-========================================= */
-
 .face-container {
     display:flex;
     justify-content:center;
@@ -112,18 +99,9 @@ body {
 }
 
 @keyframes float {
-    0%,100% {
-        transform:translateY(0);
-    }
-    50% {
-        transform:translateY(-12px);
-    }
+    0%,100% { transform:translateY(0); }
+    50% { transform:translateY(-12px); }
 }
-
-
-/* =========================================
-   OLHOS
-========================================= */
 
 .eyes-row {
     display:flex;
@@ -138,22 +116,9 @@ body {
     height:clamp(150px,20vw,290px);
     background:var(--eye-white);
     border-radius:80px;
-    box-shadow:
-        0 0 30px var(--glow-soft),
-        0 0 70px rgba(240,250,255,0.07);
-    transition:
-        all .4s cubic-bezier(
-            .175,
-            .885,
-            .32,
-            1.275
-        );
+    box-shadow: 0 0 30px var(--glow-soft), 0 0 70px rgba(240,250,255,0.07);
+    transition: all .4s cubic-bezier(.175, .885, .32, 1.275);
 }
-
-
-/* =========================================
-   EXPRESSÕES
-========================================= */
 
 .sleeping .eye {
     width:clamp(140px,18vw,260px);
@@ -203,11 +168,6 @@ body {
     transform:scaleY(0)!important;
 }
 
-
-/* =========================================
-   RESPONSIVIDADE
-========================================= */
-
 @media (orientation:landscape) {
     .eye {
         width:22vw;
@@ -224,25 +184,19 @@ body {
         max-width:270px;
         max-height:225px;
     }
-    .eyes-row {
-        gap:10vw;
-    }
+    .eyes-row { gap:10vw; }
 }
 
 </style>
-
 </head>
 
-
 <body class="awake">
-
 
 <div id="orientation-overlay">
     <div>📱🔄</div>
     <p>Gire o dispositivo para a horizontal para continuar.</p>
     <button id="btn-fullscreen">CLIQUE AQUI PARA TELA CHEIA</button>
 </div>
-
 
 <div class="face-container">
     <div class="eyes-row">
@@ -251,22 +205,16 @@ body {
     </div>
 </div>
 
-
 <script>
 
-const body=document.body;
-let recognitionActive=false;
-let robotSpeaking=false;
-let step=1;
-let userName="";
-let wakeLock=null;
-let voices=[];
-let audioCtx=null;
-
-
-/* =========================================
-   ÁUDIO
-========================================= */
+const body = document.body;
+let recognitionActive = false;
+let robotSpeaking = false;
+let step = 1;
+let userName = "";
+let wakeLock = null;
+let voices = [];
+let audioCtx = null;
 
 function inicializarAudioContext() {
     if (!audioCtx) {
@@ -281,7 +229,6 @@ function tocarSomRobotico(tipo) {
     try {
         inicializarAudioContext();
         if (!audioCtx) return;
-
         const now = audioCtx.currentTime;
 
         if (tipo === 'bip') {
@@ -296,8 +243,7 @@ function tocarSomRobotico(tipo) {
             gain.connect(audioCtx.destination);
             osc.start(now);
             osc.stop(now + 0.15);
-        } 
-        else if (tipo === 'processando') {
+        } else if (tipo === 'processando') {
             for (let i = 0; i < 3; i++) {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -314,11 +260,6 @@ function tocarSomRobotico(tipo) {
     } catch(e){}
 }
 
-
-/* =========================================
-   RECONHECIMENTO & VOZ
-========================================= */
-
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 const recognition = SpeechRecognition ? new SpeechRecognition() : null;
 
@@ -329,9 +270,7 @@ if(recognition){
     recognition.maxAlternatives=1;
 }
 
-function carregarVozes(){
-    voices=window.speechSynthesis.getVoices();
-}
+function carregarVozes(){ voices=window.speechSynthesis.getVoices(); }
 carregarVozes();
 if("onvoiceschanged" in window.speechSynthesis){
     window.speechSynthesis.onvoiceschanged=carregarVozes;
@@ -492,47 +431,36 @@ if(recognition){
     };
 }
 
-
 /* =========================================
-   SOLUÇÃO DE TELA CHEIA (FULLSCREEN)
+   FORÇA TELA CHEIA VIA EVENTO DE PONTEIRO
 ========================================= */
 
 function forcarModoFullscreen() {
-    const el = document.documentElement;
+    const doc = document.documentElement;
+    const req = doc.requestFullscreen || doc.webkitRequestFullscreen || doc.msRequestFullscreen;
 
-    if (el.requestFullscreen) {
-        el.requestFullscreen();
-    } else if (el.webkitRequestFullscreen) {
-        el.webkitRequestFullscreen();
-    } else if (el.msRequestFullscreen) {
-        el.msRequestFullscreen();
+    if (req) {
+        req.call(doc).catch(() => {});
     }
 }
 
-function acionarInterface() {
+function acionarInterface(e) {
     forcarModoFullscreen();
     manterTelaAcesa();
     inicializarAudioContext();
     acordarRobo();
 }
 
-document.getElementById("btn-fullscreen").addEventListener("click", (e) => {
+window.addEventListener('pointerdown', acionarInterface, { once: true });
+document.getElementById("btn-fullscreen").addEventListener('pointerdown', (e) => {
     e.stopPropagation();
-    acionarInterface();
+    acionarInterface(e);
 });
-
-window.addEventListener("click", acionarInterface);
-window.addEventListener("touchend", acionarInterface);
 
 window.addEventListener("orientationchange", () => {
-    setTimeout(() => {
-        forcarModoFullscreen();
-    }, 300);
+    setTimeout(forcarModoFullscreen, 300);
 });
 
-document.addEventListener("gesturestart", e => e.preventDefault());
-
 </script>
-
 </body>
 </html>
