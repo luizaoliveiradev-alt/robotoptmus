@@ -6,10 +6,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 
+<!-- Configurações para forçar modo APP (Sem barras) -->
 <meta name="theme-color" content="#050505">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="application-name" content="Robô">
 
 <title>Robô Interativo</title>
 
@@ -30,9 +32,9 @@ html,
 body {
     margin: 0;
     padding: 0;
-    width: 100%;
-    height: 100%;
-    min-height: 100dvh;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
     background: var(--dark-bg);
     overflow: hidden;
     touch-action: manipulation;
@@ -105,6 +107,7 @@ body {
     align-items:center;
     width:100vw;
     height:100vh;
+    height:100dvh;
     animation:float 5s ease-in-out infinite;
 }
 
@@ -495,42 +498,36 @@ if(recognition){
 ========================================= */
 
 function forcarModoFullscreen() {
-    const doc = document.documentElement;
+    const el = document.documentElement;
 
-    if (doc.requestFullscreen) {
-        doc.requestFullscreen().catch(() => {});
-    } else if (doc.webkitRequestFullscreen) {
-        doc.webkitRequestFullscreen();
-    } else if (doc.msRequestFullscreen) {
-        doc.msRequestFullscreen();
+    if (el.requestFullscreen) {
+        el.requestFullscreen();
+    } else if (el.webkitRequestFullscreen) {
+        el.webkitRequestFullscreen();
+    } else if (el.msRequestFullscreen) {
+        el.msRequestFullscreen();
     }
-
-    setTimeout(() => {
-        window.scrollTo(0, 1);
-    }, 100);
 }
 
-function acionarInterface(e) {
+function acionarInterface() {
     forcarModoFullscreen();
     manterTelaAcesa();
     inicializarAudioContext();
     acordarRobo();
 }
 
-// Escuta os primeiros toques e cliques em qualquer lugar da tela
-['click', 'touchstart', 'pointerdown'].forEach(evento => {
-    window.addEventListener(evento, acionarInterface, { once: true });
-});
-
 document.getElementById("btn-fullscreen").addEventListener("click", (e) => {
     e.stopPropagation();
-    acionarInterface(e);
+    acionarInterface();
 });
+
+window.addEventListener("click", acionarInterface);
+window.addEventListener("touchend", acionarInterface);
 
 window.addEventListener("orientationchange", () => {
     setTimeout(() => {
         forcarModoFullscreen();
-    }, 200);
+    }, 300);
 });
 
 document.addEventListener("gesturestart", e => e.preventDefault());
